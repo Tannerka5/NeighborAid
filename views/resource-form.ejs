@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit Resource - NeighborAid</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo-brand img {
+            height: 40px;
+        }
+
+        .logo-brand h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            color: #1e3c72;
+            font-weight: 700;
+        }
+
+        .back-link {
+            color: #2a5298;
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-size: 16px;
+            color: #1e3c72;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .resource-category-info {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2a5298;
+            padding: 12px 15px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .quantity-helper {
+            background-color: #f5f5f5;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        .resource-preview {
+            background-color: #fafafa;
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .preview-title {
+            font-size: 14px;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .preview-card {
+            background: white;
+            border-left: 4px solid #2a5298;
+            border-radius: 6px;
+            padding: 15px;
+        }
+
+        .preview-resource-name {
+            font-size: 16px;
+            color: #1e3c72;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .preview-resource-desc {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .preview-category {
+            display: inline-block;
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(42, 82, 152, 0.3);
+        }
+
+        .secondary-btn {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .secondary-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .error-message {
+            background-color: #fee;
+            color: #c33;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo-brand">
+                <img src="/images/NeighborAid-Icon.png" alt="NeighborAid">
+                <h1>NeighborAid</h1>
+            </a>
+            <div class="header-actions">
+                <div class="user-profile">
+                    <div class="user-avatar"><%= user.firstName.charAt(0).toUpperCase() %></div>
+                    <span><%= user.firstName %></span>
+                </div>
+                <form action="/logout" method="POST" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h2 class="page-title"><%= isEdit ? 'Edit' : 'Add' %> Resource</h2>
+            <a href="/resources" class="back-link">← Back to Resources</a>
+        </div>
+
+        <div class="form-card">
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="error-message"><%= error %></div>
+            <% } %>
+
+            <form method="POST" action="<%= isEdit ? '/resources/update/' + resource.id : '/resources/add' %>">
+                <div class="form-section">
+                    <h3 class="form-section-title">Resource Details</h3>
+
+                    <div class="form-group">
+                        <label for="resourceType">Resource Type *</label>
+                        <select id="resourceType" name="resourceTypeId" required onchange="updatePreview()">
+                            <option value="">Select a resource type...</option>
+                            <% resourceTypes.forEach(function(type) { %>
+                                <option value="<%= type.id %>" <%= isEdit && resource.resourceTypeId === type.id ? 'selected' : '' %>>
+                                    <%= type.name %>
+                                </option>
+                            <% }); %>
+                        </select>
+                        <% if (selectedType) { %>
+                            <div class="resource-category-info">
+                                📁 Category: <strong><%= selectedType.category %></strong> - <%= selectedType.description %>
+                            </div>
+                        <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantity *</label>
+                        <input 
+                            type="number" 
+                            id="quantity" 
+                            name="quantity" 
+                            min="1" 
+                            required
+                            placeholder="Enter quantity"
+                            value="<%= isEdit ? resource.quantity : '' %>"
+                            onchange="updatePreview()"
+                        >
+                        <div class="quantity-helper">
+                            💡 Enter the number of units you have available (e.g., 2 generators, 10 gallons of water)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            placeholder="Provide additional details about this resource (e.g., condition, specifications, contact person for this resource)"
+                            onchange="updatePreview()"
+                        ><%= isEdit ? resource.description : '' %></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="form-section-title">Availability</h3>
+
+                    <div class="checkbox-group">
+                        <input 
+                            type="checkbox" 
+                            id="isAvailable" 
+                            name="isAvailable"
+                            <%= isEdit && !resource.isAvailable ? '' : 'checked' %>
+                            onchange="updatePreview()"
+                        >
+                        <label for="isAvailable">This resource is currently available</label>
+                    </div>
+                </div>
+
+                <div class="resource-preview">
+                    <div class="preview-title">📋 Resource Preview</div>
+                    <div class="resource-item">
+                        <div class="preview-category" id="previewCategory">Resource Category</div>
+                        <div class="preview-resource-name" id="previewName">Resource Name</div>
+                        <div class="preview-resource-desc" id="previewDesc">Your description will appear here</div>
+                        <div style="margin-top: 10px;">
+                            <span style="font-size: 12px; color: #666;">
+                                📊 Quantity: <strong id="previewQty">0</strong> | 
+                                Status: <strong id="previewStatus">Available</strong>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="primary-btn">💾 <%= isEdit ? 'Update' : 'Add' %> Resource</button>
+                    <a href="/resources" class="secondary-btn">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            const resourceTypeSelect = document.getElementById('resourceType');
+            const quantityInput = document.getElementById('quantity');
+            const descriptionInput = document.getElementById('description');
+            const isAvailableInput = document.getElementById('isAvailable');
+
+            const selectedOption = resourceTypeSelect.options[resourceTypeSelect.selectedIndex];
+            const resourceName = selectedOption.text;
+            
+            // Get resource type from data attribute if available
+            const selectedIndex = resourceTypeSelect.selectedIndex;
+            const resourceTypes = <%= JSON.stringify(resourceTypes) %>;
+            const selectedType = resourceTypes[selectedIndex - 1]; // Subtract 1 for "Select a resource type" option
+
+            document.getElementById('previewName').textContent = resourceName;
+            document.getElementById('previewQty').textContent = quantityInput.value || '0';
+            document.getElementById('previewDesc').textContent = descriptionInput.value || 'Add a description to help your neighbors understand this resource';
+            document.getElementById('previewStatus').textContent = isAvailableInput.checked ? 'Available' : 'Unavailable';
+            
+            if (selectedType) {
+                document.getElementById('previewCategory').textContent = selectedType.category.toUpperCase();
+            }
+        }
+
+        // Initialize preview on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
