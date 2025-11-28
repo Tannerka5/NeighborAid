@@ -8,7 +8,6 @@ exports.handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // lookup the user
     const result = await db.query(
       "SELECT * FROM users WHERE email=$1",
       [email]
@@ -20,12 +19,11 @@ exports.handleLogin = async (req, res) => {
 
     const foundUser = result.rows[0];
 
-    // VERY SIMPLE password match (your project only needs this)
+    // simple match for this project
     if (password !== foundUser.password_hash) {
       return res.render("login", { error: "Invalid email or password" });
     }
 
-    // store user in session
     req.session.user = {
       id: foundUser.id,
       firstName: foundUser.first_name,
@@ -33,8 +31,8 @@ exports.handleLogin = async (req, res) => {
       email: foundUser.email,
       role: foundUser.role
     };
-    //debug
-    console.log("AFTER LOGIN, SESSION = ", req.session);
+
+    console.log("AFTER LOGIN, SESSION =", req.session);
 
     return res.redirect("/dashboard");
 
@@ -49,9 +47,14 @@ exports.showRegister = (req, res) => {
 };
 
 exports.handleRegister = async (req, res) => {
-  const { first_name, last_name, email, password } = req.body;
+  const { firstName, lastName, email, password, confirmpassword } = req.body;
+
+  if (password !== confirmpassword) {
+    return res.render("register", { error: "Passwords do not match" });
+  }
 
   try {
+    // check existing email
     const existing = await db.query(
       "SELECT id FROM users WHERE email=$1",
       [email]
@@ -61,11 +64,21 @@ exports.handleRegister = async (req, res) => {
       return res.render("register", { error: "Email already in use" });
     }
 
+    // create user
     const newUser = await db.query(
       "INSERT INTO users (first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING *",
-      [first_name, last_name, email, password]
+      [firstName, lastName, email, password]
     );
 
+    const userId = newUser.rows[0].id;
+
+    // create default household
+    await db.query(
+      "INSERT INTO households (user_id) VALUES ($1)",
+      [userId]
+    );
+
+    // store session
     req.session.user = {
       id: newUser.rows[0].id,
       firstName: newUser.rows[0].first_name,
@@ -74,7 +87,7 @@ exports.handleRegister = async (req, res) => {
       role: newUser.rows[0].role
     };
 
-    res.redirect("/dashboard");
+    return res.redirect("/dashboard");
 
   } catch (err) {
     console.log("REGISTER ERROR:", err);
