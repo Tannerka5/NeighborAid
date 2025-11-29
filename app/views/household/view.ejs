@@ -166,7 +166,7 @@
   <!-- HEADER -->
   <header>
     <div class="header-content">
-      <a href="/" class="logo-brand">
+      <a href="/dashboard" class="logo-brand">
         <img src="/images/NeighborAid Icon.png" alt="NeighborAid">
         <h1>NeighborAid</h1>
       </a>
@@ -186,32 +186,32 @@
 
         <div class="profile-item">
           <div class="profile-label">Address</div>
-          <div class="profile-value"><%= household.address %></div>
+          <div class="profile-value"><%= household.address || '—' %></div>
         </div>
 
         <div class="profile-item">
           <div class="profile-label">Latitude</div>
-          <div class="profile-value"><%= household.latitude %></div>
+          <div class="profile-value"><%= household.latitude || '—' %></div>
         </div>
 
         <div class="profile-item">
           <div class="profile-label">Longitude</div>
-          <div class="profile-value"><%= household.longitude %></div>
+          <div class="profile-value"><%= household.longitude || '—' %></div>
         </div>
 
         <div class="profile-item">
           <div class="profile-label">Phone Number</div>
-          <div class="profile-value"><%= household.phone_number %></div>
+          <div class="profile-value"><%= household.phone_number || '—' %></div>
         </div>
 
         <div class="profile-item">
           <div class="profile-label">Readiness Level</div>
-          <div class="profile-value"><%= household.readiness_level %></div>
+          <div class="profile-value"><%= household.readiness_level || '—' %></div>
         </div>
 
         <div class="profile-item">
           <div class="profile-label">Notes</div>
-          <div class="profile-value"><%= household.notes %></div>
+          <div class="profile-value"><%= household.notes || '—' %></div>
         </div>
 
       </div>

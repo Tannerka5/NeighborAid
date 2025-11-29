@@ -383,7 +383,7 @@
 <body>
     <header>
         <div class="header-content">
-            <a href="/" class="logo-brand">
+            <a href="/dashboard" class="logo-brand">
                 <img src="/images/NeighborAid Icon.png" alt="NeighborAid">
                 <h1>NeighborAid</h1>
             </a>
@@ -426,9 +426,12 @@
                 <label for="filterNeighborhood">Neighborhood</label>
                 <select id="filterNeighborhood" onchange="filterDirectory()">
                     <option value="">All Neighborhoods</option>
+
+                    <!-- Neighborhood filtering disabled (no neighborhoods table yet)
                     <% neighborhoods.forEach(function(neighborhood) { %>
                         <option value="<%= neighborhood.id %>"><%= neighborhood.name %></option>
                     <% }); %>
+                    -->
                 </select>
             </div>
 
@@ -448,10 +451,10 @@
         <% if (households && households.length > 0) { %>
             <div class="directory-grid">
                 <% households.forEach(function(household) { %>
-                    <div class="directory-card" data-category="<%= household.resources ? household.resources.map(r => r.resourceType.category).join(',') : '' %>" data-neighborhood="<%= household.neighborhoods ? household.neighborhoods.map(n => n.id).join(',') : '' %>" data-readiness="<%= household.readinessLevel %>">
+                    <div class="directory-card" data-category="<%= household.resources ? household.resources.map(r => r.resourceType.category).join(',') : '' %>" data-neighborhood="<%= household.neighborhoods ? household.neighborhoods.map(n => n.id).join(',') : '' %>" data-readiness="<%= household.readiness_level %>">
                         <div class="household-info">
                             <div>
-                                <div class="household-name"><%= household.ownerUser.firstName %> <%= household.ownerUser.lastName %></div>
+                                <div class="household-name"><%= household.first_name %> <%= household.last_name %></div>
                                 <div class="readiness-badge readiness-<%= household.readinessLevel || 'low' %>">
                                     <%= (household.readinessLevel || 'Low').toUpperCase() %>
                                 </div>
@@ -490,8 +493,8 @@
 
                         <div class="contact-section">
                             <div class="phone-number">
-                                <% if (household.phoneNumber) { %>
-                                    📞 <%= household.phoneNumber %>
+                                <% if (household.phone_number) { %>
+                                    📞 <%= household.phone_number %>
                                 <% } else { %>
                                     <span style="color: #999;">No phone on file</span>
                                 <% } %>

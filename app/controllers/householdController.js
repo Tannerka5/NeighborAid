@@ -1,57 +1,174 @@
-const db = require('../db/query');
+const db = require("../db/query");
 
-// Show the household view page
+/**
+ * /household -> redirect to /household/view
+ */
+exports.showHouseholdHome = (req, res) => {
+  return res.redirect("/household/view");
+};
+
+/**
+ * VIEW HOUSEHOLD PROFILE
+ * Loads household, owner, resources.
+ * Renders: views/household/view.ejs
+ */
 exports.showProfile = async (req, res) => {
-  const result = await db.query(
-    `SELECT * FROM households WHERE user_id = $1`,
-    [req.user.id]
-  );
+  try {
+    const userId = req.session.user.id;
 
-  res.render('household/view', {
-    user: req.user,
-    household: result.rows[0]
-  });
+    // Load household (may not exist yet)
+    const householdResult = await db.query(
+      "SELECT * FROM households WHERE user_id=$1",
+      [userId]
+    );
+
+    const household = householdResult.rows[0] || null;
+
+    // Load user/owner info
+    const userResult = await db.query(
+      "SELECT first_name, last_name, email FROM users WHERE id=$1",
+      [userId]
+    );
+
+    const ownerUser = userResult.rows[0] || {};
+
+    // Load resources (if household exists)
+    const resourcesResult = await db.query(
+      `
+      SELECT r.*,
+             rt.name AS type_name,
+             rt.category AS type_category,
+             rt.description AS type_description
+      FROM resources r
+      JOIN resource_types rt ON r.resource_type_id = rt.id
+      WHERE household_id = $1
+      `,
+      [household ? household.id : 0]
+    );
+
+    const resources = resourcesResult.rows.map(r => ({
+      id: r.id,
+      quantity: r.quantity,
+      description: r.description,
+      isAvailable: r.is_available,
+      resourceType: {
+        name: r.type_name,
+        category: r.type_category,
+        description: r.type_description
+      }
+    }));
+
+    return res.render("household/view", {
+      user: req.session.user,
+      household,
+      resources,
+      ownerUser,
+      error: null
+    });
+
+  } catch (err) {
+    console.log("HOUSEHOLD VIEW ERROR:", err);
+    return res.render("household/view", {
+      user: req.session.user,
+      household: null,
+      resources: [],
+      ownerUser: {},
+      error: "Could not load household profile"
+    });
+  }
 };
 
-// Show the edit form
+/**
+ * SHOW EDIT FORM
+ * Renders: views/household/edit.ejs
+ */
 exports.showEditForm = async (req, res) => {
-  const id = req.params.id;
+  try {
+    const userId = req.session.user.id;
 
-  const result = await db.query(
-    `SELECT * FROM households WHERE id = $1`,
-    [id]
-  );
+    const householdResult = await db.query(
+      "SELECT * FROM households WHERE user_id=$1",
+      [userId]
+    );
 
-  res.render('household/edit', {
-    user: req.user,
-    household: result.rows[0]
-  });
+    const household = householdResult.rows[0] || null;
+
+    return res.render("household/edit", {
+      user: req.session.user,
+      household,
+      error: null,
+      success: null
+    });
+
+  } catch (err) {
+    console.log("HOUSEHOLD EDIT LOAD ERROR:", err);
+    return res.render("household/edit", {
+      user: req.session.user,
+      household: null,
+      error: "Could not load edit form",
+      success: null
+    });
+  }
 };
 
-// Update household data
+/**
+ * UPDATE HOUSEHOLD PROFILE
+ */
 exports.updateProfile = async (req, res) => {
-  const { address, latitude, longitude, phone_number, readiness_level, notes } = req.body;
+  try {
+    const userId = req.session.user.id;
 
-  await db.query(
-    `UPDATE households
-     SET address=$1, latitude=$2, longitude=$3, phone_number=$4,
-         readiness_level=$5, notes=$6
-     WHERE user_id=$7`,
-    [address, latitude, longitude, phone_number, readiness_level, notes, req.user.id]
-  );
+    const {
+      address,
+      latitude,
+      longitude,
+      phoneNumber,
+      readinessLevel,
+      notes
+    } = req.body;
 
-  res.redirect('/household/view');
-};
+    await db.query(
+      `
+      UPDATE households
+      SET address=$1,
+          latitude=$2,
+          longitude=$3,
+          phone_number=$4,
+          readiness_level=$5,
+          notes=$6
+      WHERE user_id=$7
+      `,
+      [
+        address || null,
+        latitude || null,
+        longitude || null,
+        phoneNumber || null,
+        readinessLevel || null,
+        notes || null,
+        userId
+      ]
+    );
 
-// Route for /household (homepage of household section)
-exports.showHouseholdHome = async (req, res) => {
-  const result = await db.query(
-    `SELECT * FROM households WHERE user_id = $1`,
-    [req.user.id]
-  );
+    // Reload updated data
+    const updated = await db.query(
+      "SELECT * FROM households WHERE user_id=$1",
+      [userId]
+    );
 
-  res.render('household/view', {
-    user: req.user,
-    household: result.rows[0]
-  });
+    return res.render("household/edit", {
+      user: req.session.user,
+      household: updated.rows[0],
+      error: null,
+      success: "Household profile updated successfully!"
+    });
+
+  } catch (err) {
+    console.log("HOUSEHOLD UPDATE ERROR:", err);
+    return res.render("household/edit", {
+      user: req.session.user,
+      household: null,
+      error: "Could not update household",
+      success: null
+    });
+  }
 };

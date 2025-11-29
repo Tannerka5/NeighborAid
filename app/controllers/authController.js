@@ -33,7 +33,6 @@ exports.handleLogin = async (req, res) => {
     };
 
     console.log("AFTER LOGIN, SESSION =", req.session);
-
     return res.redirect("/dashboard");
 
   } catch (err) {
@@ -47,14 +46,15 @@ exports.showRegister = (req, res) => {
 };
 
 exports.handleRegister = async (req, res) => {
-  const { firstName, lastName, email, password, confirmpassword } = req.body;
+  const { first_name, last_name, email, password, confirm_password } = req.body;
 
-  if (password !== confirmpassword) {
+  // Password match
+  if (password !== confirm_password) {
     return res.render("register", { error: "Passwords do not match" });
   }
 
   try {
-    // check existing email
+    // Check duplicate email
     const existing = await db.query(
       "SELECT id FROM users WHERE email=$1",
       [email]
@@ -64,23 +64,35 @@ exports.handleRegister = async (req, res) => {
       return res.render("register", { error: "Email already in use" });
     }
 
-    // create user
+    // Create user
     const newUser = await db.query(
-      "INSERT INTO users (first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING *",
-      [firstName, lastName, email, password]
+      `
+      INSERT INTO users (first_name, last_name, email, password_hash)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+      `,
+      [first_name, last_name, email, password]
     );
 
     const userId = newUser.rows[0].id;
 
-    // create default household
+    // -------------------------------
+    // FIX: Household creation WITHOUT needing a unique constraint
+    // -------------------------------
     await db.query(
-      "INSERT INTO households (user_id) VALUES ($1)",
+      `
+      INSERT INTO households (user_id)
+      SELECT $1
+      WHERE NOT EXISTS (
+        SELECT 1 FROM households WHERE user_id = $1
+      );
+      `,
       [userId]
     );
+    // -------------------------------
 
-    // store session
     req.session.user = {
-      id: newUser.rows[0].id,
+      id: userId,
       firstName: newUser.rows[0].first_name,
       lastName: newUser.rows[0].last_name,
       email: newUser.rows[0].email,
