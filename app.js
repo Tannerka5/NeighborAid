@@ -40,11 +40,14 @@ app.use(
     saveUninitialized: false,
     cookie: { 
       httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+      // Use secure cookies only if HTTPS is available
+      secure: process.env.USE_HTTPS === 'true',
       maxAge: 24 * 60 * 60 * 1000 
     }
   })
 );
+
+
 
 // debugging: show session (remove in production)
 app.use((req, res, next) => {
