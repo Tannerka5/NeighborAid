@@ -30,12 +30,12 @@
     <br>
 
     <label>Phone Number</label>
-    <input type="text" name="phoneNumber" value="<%= household.phone_number || '' %>" />
+    <input type="text" name="phone_number" value="<%= household.phone_number || '' %>" />
 
     <br>
 
     <label>Readiness Level</label>
-    <select name="readinessLevel">
+    <select name="readiness_level">
       <option value="low" <%= household.readiness_level === 'low' ? 'selected' : '' %>>Low</option>
       <option value="medium" <%= household.readiness_level === 'medium' ? 'selected' : '' %>>Medium</option>
       <option value="high" <%= household.readiness_level === 'high' ? 'selected' : '' %>>High</option>

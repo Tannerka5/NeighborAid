@@ -455,8 +455,8 @@
                         <div class="household-info">
                             <div>
                                 <div class="household-name"><%= household.first_name %> <%= household.last_name %></div>
-                                <div class="readiness-badge readiness-<%= household.readinessLevel || 'low' %>">
-                                    <%= (household.readinessLevel || 'Low').toUpperCase() %>
+                                <div class="readiness-badge readiness-<%= household.readiness_level || 'low' %>">
+                                    <%= (household.readiness_level || 'Low').toUpperCase() %>
                                 </div>
                             </div>
                         </div>

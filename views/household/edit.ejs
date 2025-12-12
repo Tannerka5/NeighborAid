@@ -388,17 +388,28 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="neighborhood_code">Neighborhood Code</label>
+                    <input 
+                        type="text" 
+                        id="neighborhood_code" 
+                        name="neighborhood_code" 
+                        value="<%= household.neighborhood_code %>"
+                        required
+                    >
+                </div>
+
                 <div class="form-section">
                     <h3 class="form-section-title">Contact Information</h3>
 
                     <div class="form-group">
-                        <label for="phoneNumber">Phone Number</label>
+                        <label for="phone_number">Phone Number</label>
                         <input 
                             type="tel" 
-                            id="phoneNumber" 
-                            name="phoneNumber" 
+                            id="phone_number" 
+                            name="phone_number" 
                             placeholder="(123) 456-7890"
-                            value="<%= household && household.phoneNumber ? household.phoneNumber : '' %>"
+                            value="<%= household && household.phone_number ? household.phone_number : '' %>"
                         >
                     </div>
                 </div>
@@ -413,9 +424,9 @@
                                 <input 
                                     type="radio" 
                                     id="readiness-low" 
-                                    name="readinessLevel" 
+                                    name="readiness_level" 
                                     value="low"
-                                    <%= household && household.readinessLevel === 'low' ? 'checked' : '' %>
+                                    <%= household && household.readiness_level === 'low' ? 'checked' : '' %>
                                 >
                                 <label for="readiness-low">Low (Just Starting)</label>
                             </div>
@@ -423,9 +434,9 @@
                                 <input 
                                     type="radio" 
                                     id="readiness-medium" 
-                                    name="readinessLevel" 
+                                    name="readiness_level" 
                                     value="medium"
-                                    <%= household && household.readinessLevel === 'medium' ? 'checked' : '' %>
+                                    <%= household && household.readiness_level === 'medium' ? 'checked' : '' %>
                                 >
                                 <label for="readiness-medium">Medium (Partially Prepared)</label>
                             </div>
@@ -433,9 +444,9 @@
                                 <input 
                                     type="radio" 
                                     id="readiness-high" 
-                                    name="readinessLevel" 
+                                    name="readiness_level" 
                                     value="high"
-                                    <%= household && household.readinessLevel === 'high' ? 'checked' : '' %>
+                                    <%= household && household.readiness_level === 'high' ? 'checked' : '' %>
                                 >
                                 <label for="readiness-high">High (Well Prepared)</label>
                             </div>

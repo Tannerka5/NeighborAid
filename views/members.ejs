@@ -1,12 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Community Members</title>
-</head>
-<body>
-  <h1>Community Members</h1>
-  <p>This is a placeholder page for member listings.</p>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neighborhood Members</title>
 
-  <a href="/dashboard">Back to dashboard</a>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #1e3c72;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .subheader {
+      text-align: center;
+      color: #444;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .member-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border: 1px solid #e0e0e0;
+    }
+
+    .member-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #2a5298;
+      margin-bottom: 8px;
+    }
+
+    .member-field {
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .back-btn {
+      display: block;
+      width: fit-content;
+      margin: 30px auto 0;
+      padding: 10px 20px;
+      background: #1e3c72;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    .back-btn:hover {
+      background: #2a5298;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1>Members in Your Neighborhood</h1>
+
+  <div class="subheader">
+    Neighborhood Code: <strong><%= neighborhood_code || 'N/A' %></strong>
+  </div>
+
+  <div class="members-grid">
+    <% if (members && members.length > 0) { %>
+
+      <% members.forEach(member => { %>
+        <div class="member-card">
+          <div class="member-name">
+            <%= member.first_name %> <%= member.last_name %>
+          </div>
+
+          <div class="member-field">
+            <strong>Address:</strong> <%= member.address || '—' %>
+          </div>
+
+          <div class="member-field">
+            <strong>Phone:</strong> <%= member.phone_number || '—' %>
+          </div>
+
+          <div class="member-field">
+            <strong>Readiness:</strong> <%= member.readiness_level || '—' %>
+          </div>
+
+        </div>
+      <% }); %>
+
+    <% } else { %>
+
+      <p style="text-align:center; color:#555; width:100%;">
+        No other members found with your neighborhood code.
+      </p>
+
+    <% } %>
+  </div>
+
+  <a href="/dashboard" class="back-btn">Back to Dashboard</a>
+
 </body>
 </html>
