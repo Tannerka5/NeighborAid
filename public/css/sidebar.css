@@ -228,13 +228,21 @@ body {
 
 /* Main Content Area */
 .main-content {
-  margin-left: var(--sidebar-width);
-  min-height: 100vh;
-  transition: margin-left 0.3s ease;
-  padding: 24px;
-  background: #F7FAFC;
-  width: calc(100% - var(--sidebar-width));
+    margin-left: var(--sidebar-width);
+    min-height: 100vh;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+    padding: 24px;
+    background: #F7FAFC;
+    width: calc(100% - var(--sidebar-width));
 }
+
+/* When sidebar is collapsed on desktop */
+body:not(.mobile) .sidebar.collapsed ~ .main-content,
+.sidebar.collapsed + * .main-content {
+    margin-left: var(--sidebar-collapsed-width);
+    width: calc(100% - var(--sidebar-collapsed-width));
+}
+
 
 /* Mobile Header */
 .mobile-header {

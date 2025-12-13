@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar.classList.remove('collapsed');
             if (mainContent) {
                 mainContent.style.marginLeft = '260px';
+                mainContent.style.width = 'calc(100% - 260px)';
             }
         } else {
             // Mobile behavior - add open class for overlay
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sidebar.classList.add('collapsed');
             if (mainContent) {
                 mainContent.style.marginLeft = '70px';
+                mainContent.style.width = 'calc(100% - 70px)';
             }
         } else {
             // Mobile behavior - remove open class
@@ -39,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.style.overflow = '';
         }
     }
+
 
     // Desktop toggle button
     if (toggleBtn) {
@@ -86,22 +89,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Initialize sidebar state on page load
-        if (window.innerWidth > 768) {
-            // Desktop: already starts collapsed from HTML
-            if (mainContent) {
-                mainContent.style.marginLeft = '70px';
-            }
-        } else {
-            // Mobile: ensure it's closed
-            sidebar.classList.remove('collapsed');
-            sidebar.classList.remove('open');
-            if (overlay) {
-                overlay.classList.remove('active');
-            }
-            if (mainContent) {
-                mainContent.style.marginLeft = '0';
-            }
+    if (window.innerWidth > 768) {
+        // Desktop: already starts collapsed from HTML
+        if (mainContent) {
+            mainContent.style.marginLeft = '70px';
+            mainContent.style.width = 'calc(100% - 70px)';
         }
+    } else {
+        // Mobile: ensure it's closed
+        sidebar.classList.remove('collapsed');
+        sidebar.classList.remove('open');
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+        if (mainContent) {
+            mainContent.style.marginLeft = '0';
+            mainContent.style.width = '100%';
+        }
+    }
+
 
     // Handle window resize
     let resizeTimer;
@@ -120,8 +126,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (mainContent) {
                     if (isCollapsed) {
                         mainContent.style.marginLeft = '70px';
+                        mainContent.style.width = 'calc(100% - 70px)';
                     } else {
                         mainContent.style.marginLeft = '260px';
+                        mainContent.style.width = 'calc(100% - 260px)';
                     }
                 }
             } else {
@@ -129,10 +137,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 sidebar.classList.remove('collapsed');
                 if (mainContent) {
                     mainContent.style.marginLeft = '0';
+                    mainContent.style.width = '100%';
                 }
             }
         }, 100);
     });
+
 
     // Set active navigation item based on current path
     const currentPath = window.location.pathname;
