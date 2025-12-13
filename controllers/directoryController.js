@@ -22,7 +22,7 @@ exports.listHouseholds = async (req, res) => {
         r.household_id,
         r.quantity,
         r.description,
-        r.available AS is_available,
+        r.is_available,
         rt.name AS type_name,
         rt.category AS type_category
       FROM resources r
@@ -54,8 +54,8 @@ exports.listHouseholds = async (req, res) => {
       h.resources = resourcesByHousehold[h.id] || [];
     });
 
-    // 5. Render directory
-    res.render("directory/directory", {
+    // 5. Render directory - FIXED: Changed from "directory/directory" to "directory"
+    res.render("directory", {
       user: req.user,
       households,
       currentPage: 'directory'
@@ -63,7 +63,7 @@ exports.listHouseholds = async (req, res) => {
 
   } catch (error) {
     console.log("DIRECTORY ERROR:", error);
-    res.render("directory/directory", {
+    res.render("directory", {
       user: req.user,
       households: [],
       error: "Unexpected error loading directory.",
@@ -105,7 +105,7 @@ exports.getMapData = async (req, res) => {
       return res.json([]);
     }
 
-    const neighborhoodCode = userHouseholdResult.rows.neighborhood_code;
+    const neighborhoodCode = userHouseholdResult.rows[0].neighborhood_code;
 
     if (!neighborhoodCode) {
       return res.json([]);
@@ -125,8 +125,8 @@ exports.getMapData = async (req, res) => {
       [neighborhoodCode]
     );
 
-    const centerLat = centroidResult.rows?.center_lat || 40.2338; // Default BYU coords
-    const centerLng = centroidResult.rows?.center_lng || -111.6585;
+    const centerLat = centroidResult.rows[0]?.center_lat || 40.2338; // Default BYU coords
+    const centerLng = centroidResult.rows[0]?.center_lng || -111.6585;
 
     // Fetch households + resources in same neighborhood
     const mapDataResult = await db.query(
@@ -145,11 +145,11 @@ exports.getMapData = async (req, res) => {
               'resource_type_id', r.resource_type_id,
               'quantity', r.quantity,
               'description', r.description,
-              'is_available', r.available,
+              'is_available', r.is_available,
               'resource_name', rt.name,
               'category', rt.category
             )
-          ) FILTER (WHERE r.available = true),
+          ) FILTER (WHERE r.is_available = true),
           '[]'
         ) AS resources
       FROM households h
