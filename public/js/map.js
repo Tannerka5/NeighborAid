@@ -1,52 +1,139 @@
-
-
 document.addEventListener("DOMContentLoaded", async () => {
-  // Initialize map (fallback center if no data yet)
-  const map = L.map("map").setView([39.8283, -98.5795], 4); // US center
+  const mapElement = document.getElementById("map");
+  const loadingMessage = document.getElementById("loading");
 
-  // Base map layer
+  if (!mapElement) {
+    console.error("Map element not found");
+    return;
+  }
+
+  // Initialize map with default center
+  const map = L.map("map").setView([40.2338, -111.6585], 13); // Default to Provo, UT (BYU area)
+
+  // Add OpenStreetMap tile layer
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap contributors"
+    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 19
   }).addTo(map);
 
-  let markers = [];
-
   try {
+    // Fetch map data
     const response = await fetch("/directory/map/data");
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const households = await response.json();
 
+    // Hide loading message
+    if (loadingMessage) {
+      loadingMessage.style.display = 'none';
+    }
+
     if (!households || households.length === 0) {
-      console.log("No map data returned");
+      console.log("No households with map data available");
+      
+      // Show message on map
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'loading-message';
+      messageDiv.textContent = 'No households found in your neighborhood';
+      mapElement.appendChild(messageDiv);
       return;
     }
 
-    // Center map on first household
-    map.setView([households[0].latitude, households[0].longitude], 14);
+    // Find households with valid coordinates
+    const validHouseholds = households.filter(h => 
+      h.latitude && h.longitude && 
+      !isNaN(h.latitude) && !isNaN(h.longitude)
+    );
 
-    households.forEach(h => {
-      if (!h.latitude || !h.longitude) return;
+    if (validHouseholds.length === 0) {
+      console.log("No households with valid coordinates");
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'loading-message';
+      messageDiv.textContent = 'No location data available for households';
+      mapElement.appendChild(messageDiv);
+      return;
+    }
 
-      const marker = L.marker([h.latitude, h.longitude]).addTo(map);
+    // Center map on first valid household
+    map.setView([validHouseholds[0].latitude, validHouseholds[0].longitude], 14);
 
-      let popupHtml = `<strong>${h.first_name} ${h.last_name}</strong><br/>`;
+    // Create marker cluster group for better performance
+    const markers = [];
 
-      if (h.resources && h.resources.length > 0) {
-        popupHtml += "<ul>";
-        h.resources.forEach(r => {
-          popupHtml += `<li>${r.resource_name} (${r.quantity})</li>`;
+    validHouseholds.forEach(household => {
+      const lat = parseFloat(household.latitude);
+      const lng = parseFloat(household.longitude);
+
+      // Create marker
+      const marker = L.marker([lat, lng]).addTo(map);
+
+      // Build popup content
+      let popupContent = `
+        <div class="popup-header">
+          ${household.first_name} ${household.last_name}
+        </div>
+      `;
+
+      // Add resources if available
+      if (household.resources && household.resources.length > 0) {
+        popupContent += '<ul class="resource-list">';
+        household.resources.forEach(resource => {
+          const icon = getCategoryIcon(resource.category);
+          const quantity = resource.quantity > 1 ? ` (x${resource.quantity})` : '';
+          popupContent += `
+            <li>
+              <span class="resource-icon">${icon}</span>
+              <span>${resource.resource_name}${quantity}</span>
+            </li>
+          `;
         });
-        popupHtml += "</ul>";
+        popupContent += '</ul>';
       } else {
-        popupHtml += "<em>No available resources</em>";
+        popupContent += '<p class="no-resources">No available resources listed</p>';
       }
 
-      marker.bindPopup(popupHtml);
-      marker.resources = h.resources || [];
+      // Bind popup to marker
+      marker.bindPopup(popupContent, {
+        maxWidth: 300,
+        className: 'custom-popup'
+      });
 
       markers.push(marker);
     });
 
-  } catch (err) {
-    console.error("Map initialization error:", err);
+    // Fit map to show all markers
+    if (markers.length > 1) {
+      const group = new L.featureGroup(markers);
+      map.fitBounds(group.getBounds().pad(0.1));
+    }
+
+    console.log(`Successfully loaded ${markers.length} markers`);
+
+  } catch (error) {
+    console.error("Map initialization error:", error);
+    
+    // Hide loading message and show error
+    if (loadingMessage) {
+      loadingMessage.textContent = 'Error loading map data. Please try again later.';
+      loadingMessage.style.color = '#c33';
+    }
   }
 });
+
+// Helper function to get icon based on resource category
+function getCategoryIcon(category) {
+  const icons = {
+    'supplies': '📦',
+    'equipment': '⚙️',
+    'skills': '🎓',
+    'space': '🏠',
+    'medical': '🏥',
+    'food': '🍎',
+    'water': '💧',
+    'tools': '🔧'
+  };
+  return icons[category] || '📦';
+}

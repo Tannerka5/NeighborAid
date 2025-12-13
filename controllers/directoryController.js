@@ -110,9 +110,9 @@ exports.getMapData = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    // Get current user's neighborhood
+    // Get current user's household
     const userHouseholdResult = await db.query(
-      "SELECT neighborhood_code FROM households WHERE user_id = $1",
+      "SELECT neighborhood_code, address FROM households WHERE user_id = $1",
       [userId]
     );
 
@@ -126,32 +126,16 @@ exports.getMapData = async (req, res) => {
       return res.json([]);
     }
 
-    // Get neighborhood centroid for fallback coordinates
-    const centroidResult = await db.query(
-      `
-      SELECT 
-        AVG(latitude) AS center_lat,
-        AVG(longitude) AS center_lng
-      FROM households
-      WHERE neighborhood_code = $1
-        AND latitude IS NOT NULL
-        AND longitude IS NOT NULL
-      `,
-      [neighborhoodCode]
-    );
-
-    const centerLat = centroidResult.rows[0]?.center_lat || 40.2338; // Default BYU coords
-    const centerLng = centroidResult.rows[0]?.center_lng || -111.6585;
-
-    // Fetch households + resources in same neighborhood - SORTED BY NAME
+    // Fetch households + resources in same neighborhood with addresses
     const mapDataResult = await db.query(
       `
       SELECT
         h.id AS household_id,
         u.first_name AS first_name,
         u.last_name AS last_name,
-        COALESCE(h.latitude, $2) AS latitude,
-        COALESCE(h.longitude, $3) AS longitude,
+        h.address,
+        h.latitude,
+        h.longitude,
         h.neighborhood_code,
         COALESCE(
           json_agg(
@@ -164,7 +148,7 @@ exports.getMapData = async (req, res) => {
               'resource_name', rt.name,
               'category', rt.category
             )
-          ) FILTER (WHERE r.is_available = true),
+          ) FILTER (WHERE r.is_available = true AND r.id IS NOT NULL),
           '[]'
         ) AS resources
       FROM households h
@@ -172,10 +156,12 @@ exports.getMapData = async (req, res) => {
       LEFT JOIN resources r ON r.household_id = h.id
       LEFT JOIN resource_types rt ON rt.id = r.resource_type_id
       WHERE h.neighborhood_code = $1
-      GROUP BY h.id, u.first_name, u.last_name
+        AND h.latitude IS NOT NULL
+        AND h.longitude IS NOT NULL
+      GROUP BY h.id, u.first_name, u.last_name, h.address, h.latitude, h.longitude, h.neighborhood_code
       ORDER BY u.last_name ASC, u.first_name ASC
       `,
-      [neighborhoodCode, centerLat, centerLng]
+      [neighborhoodCode]
     );
 
     res.json(mapDataResult.rows);
