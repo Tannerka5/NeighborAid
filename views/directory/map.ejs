@@ -1,178 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Neighborhood Resource Map – NeighborAid</title>
+<%- include('../partials/header') %>
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+<style>
+  /* Keep your existing map-specific styles */
+  .map-container {
+    width: 100%;
+    height: calc(100vh - 100px);
+    background: #f5f7fa;
+    border-radius: 10px;
+    overflow: hidden;
+  }
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .info-banner {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border-left: 4px solid #2a5298;
+    padding: 20px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+    color: #1565c0;
+  }
+
+  .info-banner h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .info-banner p {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .map-container {
+      height: calc(100vh - 150px);
     }
+  }
+</style>
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
-    }
+<div class="page-header">
+  <div>
+    <h1>Neighborhood Resource Map</h1>
+    <p class="page-subtitle">View available resources on an interactive map</p>
+  </div>
+</div>
 
-    /* HEADER -------------------------------------------------- */
-    header {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      color: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+<div class="info-banner">
+  <h3>🗺️ Interactive Resource Map</h3>
+  <p>Explore resources available in your neighborhood. Click on markers to see details about each household's emergency supplies and capabilities.</p>
+</div>
 
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+<div class="map-container">
+  <div id="map"></div>
+</div>
 
-    .logo-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: white;
-    }
-
-    .logo-brand img {
-      height: 40px;
-    }
-
-    .logo-brand h1 {
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    /* MAIN LAYOUT -------------------------------------------- */
-    .content-area {
-      max-width: 1400px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    /* PAGE HEADER ROW ---------------------------------------- */
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .page-title {
-      font-size: 32px;
-      color: #1e3c72;
-      font-weight: 700;
-    }
-
-    .page-subtitle {
-      color: #555;
-      margin-bottom: 20px;
-      font-size: 15px;
-    }
-
-    /* PRIMARY BUTTON ----------------------------------------- */
-    .primary-btn {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      color: white;
-      border: none;
-      padding: 12px 22px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      white-space: nowrap;
-    }
-
-    .primary-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(42, 82, 152, 0.3);
-    }
-
-    /* MAP CARD ----------------------------------------------- */
-    .map-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
-
-    #map {
-      height: calc(100vh - 260px);
-      width: 100%;
-      border-radius: 12px;
-    }
-
-    /* FILTER PANEL ------------------------------------------- */
-    .filter-panel {
-      margin-bottom: 15px;
-      color: #666;
-      font-size: 14px;
-    }
-
-    @media (max-width: 768px) {
-      #map {
-        height: calc(100vh - 320px);
-      }
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- HEADER -->
-  <header>
-    <div class="header-content">
-      <a href="/dashboard" class="logo-brand">
-        <img src="/images/NeighborAid Icon.png" alt="NeighborAid">
-        <h1>NeighborAid</h1>
-      </a>
-    </div>
-  </header>
-
-  <!-- CONTENT -->
-  <main class="content-area">
-
-    <!-- TITLE + BUTTON ROW -->
-    <div class="page-header">
-      <h2 class="page-title">Neighborhood Resource Map</h2>
-      <a href="/dashboard" class="primary-btn">Back to Dashboard</a>
-    </div>
-
-    <p class="page-subtitle">
-      View available resources shared by households in your neighborhood.
-    </p>
-
-    <div class="map-card">
-
-      <div class="filter-panel">
-        <!-- Filters will be injected here later -->
-      </div>
-
-      <div id="map"></div>
-
-    </div>
-
-  </main>
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

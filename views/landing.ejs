@@ -12,7 +12,7 @@
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      background: #f5f7fa;
       color: white;
     }
 
@@ -20,6 +20,8 @@
     .navbar {
       background: white;
       box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 10;
     }
     .navbar-brand img {
       height: 55px;
@@ -27,37 +29,64 @@
 
     /* Make the nav login button match the hero button */
     .btn-login {
-      background: white;
-      color: #1e3c72 !important;
+      background: #1e3c72;
+      color: white !important;
       padding: 14px 26px;
       border-radius: 10px;
       font-size: 1rem;
       font-weight: 600;
       border: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 12px rgba(30,60,114,0.3);
       transition: all .25s ease;
     }
     .btn-login:hover {
-      background: white;
-      color: #162d59 !important;
+      background: #2a5298;
+      color: white !important;
       transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      box-shadow: 0 8px 20px rgba(30,60,114,0.4);
     }
 
-    /* HERO SECTION */
+    /* HERO SECTION with Neighborhood Background */
     .blue-top {
+      position: relative;
       padding-top: 5rem;
       padding-bottom: 8rem;
       text-align: center;
+      background: linear-gradient(135deg, rgba(30,60,114,0.85) 0%, rgba(42,82,152,0.85) 100%);
+      overflow: hidden;
     }
+
+    /* Minimalistic Neighborhood SVG Background */
+    .blue-top::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 400' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3Cstyle%3E.house%7Bfill:%23ffffff;opacity:0.15;%7D.tree%7Bfill:%23ffffff;opacity:0.1;%7D.window%7Bfill:%23ffffff;opacity:0.25;%7D%3C/style%3E%3C/defs%3E%3C!-- Sky gradient --%3E%3Crect width='1200' height='400' fill='%231e3c72'/%3E%3C!-- Ground --%3E%3Cpath d='M0,300 L1200,300 L1200,400 L0,400 Z' fill='%23162d59' opacity='0.3'/%3E%3C!-- Houses --%3E%3C!-- House 1 --%3E%3Cpolygon class='house' points='100,180 160,140 220,180 220,280 100,280'/%3E%3Crect class='window' x='120' y='200' width='30' height='30'/%3E%3Crect class='window' x='170' y='200' width='30' height='30'/%3E%3Crect class='window' x='145' y='240' width='30' height='40'/%3E%3C!-- House 2 --%3E%3Cpolygon class='house' points='300,200 370,160 440,200 440,280 300,280'/%3E%3Crect class='window' x='320' y='220' width='35' height='35'/%3E%3Crect class='window' x='385' y='220' width='35' height='35'/%3E%3C!-- House 3 --%3E%3Cpolygon class='house' points='520,190 590,150 660,190 660,280 520,280'/%3E%3Crect class='window' x='540' y='210' width='30' height='30'/%3E%3Crect class='window' x='590' y='210' width='30' height='30'/%3E%3Crect class='window' x='565' y='245' width='30' height='35'/%3E%3C!-- House 4 --%3E%3Cpolygon class='house' points='760,185 820,145 880,185 880,280 760,280'/%3E%3Crect class='window' x='780' y='205' width='30' height='30'/%3E%3Crect class='window' x='830' y='205' width='30' height='30'/%3E%3C!-- House 5 --%3E%3Cpolygon class='house' points='960,195 1020,155 1080,195 1080,280 960,280'/%3E%3Crect class='window' x='980' y='215' width='30' height='30'/%3E%3Crect class='window' x='1030' y='215' width='30' height='30'/%3E%3C!-- Trees --%3E%3Cellipse class='tree' cx='250' cy='260' rx='25' ry='30'/%3E%3Crect class='tree' x='240' y='260' width='20' height='20' opacity='0.08'/%3E%3Cellipse class='tree' cx='480' cy='255' rx='30' ry='35'/%3E%3Crect class='tree' x='468' y='255' width='24' height='25' opacity='0.08'/%3E%3Cellipse class='tree' cx='710' cy='250' rx='28' ry='32'/%3E%3Crect class='tree' x='698' y='250' width='24' height='30' opacity='0.08'/%3E%3Cellipse class='tree' cx='920' cy='258' rx='26' ry='30'/%3E%3Crect class='tree' x='910' y='258' width='20' height='22' opacity='0.08'/%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center bottom;
+      background-repeat: no-repeat;
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    .blue-top > * {
+      position: relative;
+      z-index: 1;
+    }
+
     .blue-top h1 {
       font-size: 2.3rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     .blue-top p {
       font-size: 1.15rem;
-      opacity: 0.9;
+      opacity: 0.95;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
 
     /* White hero button */
@@ -72,6 +101,8 @@
       margin-top: 2rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
       transition: all .25s ease;
+      display: inline-block;
+      text-decoration: none;
     }
     .hero-btn:hover {
       background: white;
@@ -85,7 +116,7 @@
       background: white;
       color: black;
       border-radius: 2rem 2rem 0 0;
-      margin-top: 6rem; /* <-- THIS MOVES THE CONTAINER DOWN */
+      margin-top: 6rem;
       padding: 3rem 1.5rem;
     }
 
@@ -125,6 +156,15 @@
       text-decoration: underline;
     }
 
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .blue-top h1 {
+        font-size: 1.8rem;
+      }
+      .blue-top p {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 

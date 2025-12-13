@@ -1,474 +1,277 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Household - NeighborAid</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<%- include('../partials/header') %>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-        }
+<style>
+  .form-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+  }
 
-        header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+  .form-section {
+    margin-bottom: 30px;
+  }
 
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+  .form-section-title {
+    font-size: 18px;
+    color: #1e3c72;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+  }
 
-        .logo-brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: white;
-        }
+  .form-group {
+    margin-bottom: 20px;
+  }
 
-        .logo-brand img {
-            height: 40px;
-        }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
 
-        .logo-brand h1 {
-            font-size: 24px;
-            font-weight: 700;
-        }
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+  }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: border-color 0.3s;
+  }
 
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #2a5298;
+  }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
 
-        .logout-btn {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
+  .readiness-level {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
 
-        .logout-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
+  .readiness-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-        .container {
-            max-width: 1000px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
+  .readiness-option input[type="radio"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+  }
 
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
+  .readiness-option label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+  }
 
-        .page-title {
-            font-size: 32px;
-            color: #1e3c72;
-            font-weight: 700;
-        }
+  .button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+  }
 
-        .back-link {
-            color: #2a5298;
-            text-decoration: none;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+  .info-box {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2a5298;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #1565c0;
+  }
 
-        .back-link:hover {
-            text-decoration: underline;
-        }
+  .coordinates-info {
+    background-color: #f5f5f5;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #666;
+    margin-top: 8px;
+  }
 
-        .form-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-            margin-bottom: 30px;
-        }
+  @media (max-width: 600px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
 
-        .form-section {
-            margin-bottom: 30px;
-        }
+    .button-group {
+      flex-direction: column;
+    }
 
-        .form-section-title {
-            font-size: 18px;
-            color: #1e3c72;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e0e0e0;
-        }
+    .form-card {
+      padding: 20px;
+    }
+  }
+</style>
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+<div class="page-header">
+  <h1>Household Profile</h1>
+  <p class="page-subtitle">Keep your household information up-to-date</p>
+</div>
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+<div class="form-card">
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-error"><%= error %></div>
+  <% } %>
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
-        }
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
 
-        input[type="text"],
-        input[type="tel"],
-        input[type="email"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: border-color 0.3s;
-        }
+  <div class="info-box">
+    💡 Keep your household information up-to-date so your neighbors can find and assist you in emergencies.
+  </div>
 
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #2a5298;
-        }
+  <form method="POST" action="/household/update">
+    <div class="form-section">
+      <h3 class="form-section-title">Location Information</h3>
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
+      <div class="form-group">
+        <label for="address">Address *</label>
+        <input 
+          type="text" 
+          id="address" 
+          name="address" 
+          placeholder="123 Main Street, City, State ZIP" 
+          required 
+          value="<%= household && household.address ? household.address : '' %>"
+        />
+      </div>
 
-        .readiness-level {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .readiness-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .readiness-option input[type="radio"] {
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
-        }
-
-        .readiness-option label {
-            margin: 0;
-            cursor: pointer;
-            font-weight: normal;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        .primary-btn {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(42, 82, 152, 0.3);
-        }
-
-        .secondary-btn {
-            background-color: #e0e0e0;
-            color: #333;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-
-        .secondary-btn:hover {
-            background-color: #d0d0d0;
-        }
-
-        .info-box {
-            background-color: #e3f2fd;
-            border-left: 4px solid #2a5298;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: #1565c0;
-        }
-
-        .error-message {
-            background-color: #fee;
-            color: #c33;
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            border-left: 4px solid #c33;
-        }
-
-        .success-message {
-            background-color: #efe;
-            color: #3c3;
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            border-left: 4px solid #3c3;
-        }
-
-        .coordinates-info {
-            background-color: #f5f5f5;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .button-group {
-                flex-direction: column;
-            }
-
-            .page-title {
-                font-size: 24px;
-            }
-
-            .form-card {
-                padding: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <a href="/dashboard" class="logo-brand">
-                <img src="/images/NeighborAid Icon.png" alt="NeighborAid">
-                <h1>NeighborAid</h1>
-            </a>
-            <div class="header-actions">
-                <div class="user-profile">
-                    <div class="user-avatar"><%= user.firstName.charAt(0).toUpperCase() %></div>
-                    <span><%= user.firstName %></span>
-                </div>
-                <form action="/logout" method="POST" style="display: inline;">
-                    <button type="submit" class="logout-btn">Logout</button>
-                </form>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div class="page-header">
-            <h2 class="page-title">Household Profile</h2>
-            <a href="/dashboard" class="back-link">← Back to Dashboard</a>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="latitude">Latitude</label>
+          <input 
+            type="text" 
+            id="latitude" 
+            name="latitude" 
+            placeholder="40.7128" 
+            value="<%= household && household.latitude ? household.latitude : '' %>"
+          />
+          <div class="coordinates-info">Optional: Used for mapping. Leave blank to auto-detect.</div>
         </div>
 
-        <div class="form-card">
-            <% if (typeof error !== 'undefined' && error) { %>
-                <div class="error-message"><%= error %></div>
-            <% } %>
-
-            <% if (typeof success !== 'undefined' && success) { %>
-                <div class="success-message"><%= success %></div>
-            <% } %>
-
-            <div class="info-box">
-                📍 Keep your household information up-to-date so your neighbors can find and assist you in emergencies.
-            </div>
-
-            <form method="POST" action="/household/update">
-                <div class="form-section">
-                    <h3 class="form-section-title">Location Information</h3>
-
-                    <div class="form-group">
-                        <label for="address">Address *</label>
-                        <input 
-                            type="text" 
-                            id="address" 
-                            name="address" 
-                            placeholder="123 Main Street, City, State ZIP" 
-                            required
-                            value="<%= household && household.address ? household.address : '' %>"
-                        >
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="latitude">Latitude</label>
-                            <input 
-                                type="text" 
-                                id="latitude" 
-                                name="latitude" 
-                                placeholder="40.7128"
-                                value="<%= household && household.latitude ? household.latitude : '' %>"
-                            >
-                            <div class="coordinates-info">Optional: Used for mapping. Leave blank to auto-detect.</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="longitude">Longitude</label>
-                            <input 
-                                type="text" 
-                                id="longitude" 
-                                name="longitude" 
-                                placeholder="-74.0060"
-                                value="<%= household && household.longitude ? household.longitude : '' %>"
-                            >
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="neighborhood_code">Neighborhood Code</label>
-                    <input 
-                        type="text" 
-                        id="neighborhood_code" 
-                        name="neighborhood_code" 
-                        value="<%= household.neighborhood_code %>"
-                        required
-                    >
-                </div>
-
-                <div class="form-section">
-                    <h3 class="form-section-title">Contact Information</h3>
-
-                    <div class="form-group">
-                        <label for="phone_number">Phone Number</label>
-                        <input 
-                            type="tel" 
-                            id="phone_number" 
-                            name="phone_number" 
-                            placeholder="(123) 456-7890"
-                            value="<%= household && household.phone_number ? household.phone_number : '' %>"
-                        >
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3 class="form-section-title">Emergency Preparedness Status</h3>
-
-                    <div class="form-group">
-                        <label>Readiness Level</label>
-                        <div class="readiness-level">
-                            <div class="readiness-option">
-                                <input 
-                                    type="radio" 
-                                    id="readiness-low" 
-                                    name="readiness_level" 
-                                    value="low"
-                                    <%= household && household.readiness_level === 'low' ? 'checked' : '' %>
-                                >
-                                <label for="readiness-low">Low (Just Starting)</label>
-                            </div>
-                            <div class="readiness-option">
-                                <input 
-                                    type="radio" 
-                                    id="readiness-medium" 
-                                    name="readiness_level" 
-                                    value="medium"
-                                    <%= household && household.readiness_level === 'medium' ? 'checked' : '' %>
-                                >
-                                <label for="readiness-medium">Medium (Partially Prepared)</label>
-                            </div>
-                            <div class="readiness-option">
-                                <input 
-                                    type="radio" 
-                                    id="readiness-high" 
-                                    name="readiness_level" 
-                                    value="high"
-                                    <%= household && household.readiness_level === 'high' ? 'checked' : '' %>
-                                >
-                                <label for="readiness-high">High (Well Prepared)</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes">Additional Notes</label>
-                        <textarea 
-                            id="notes" 
-                            name="notes" 
-                            placeholder="Add any additional information about your household's preparedness or special needs..."
-                        ><%= household && household.notes ? household.notes : '' %></textarea>
-                    </div>
-                </div>
-
-                <div class="button-group">
-                    <button type="submit" class="primary-btn">💾 Save Changes</button>
-                    <a href="/dashboard" class="secondary-btn">Cancel</a>
-                </div>
-            </form>
+        <div class="form-group">
+          <label for="longitude">Longitude</label>
+          <input 
+            type="text" 
+            id="longitude" 
+            name="longitude" 
+            placeholder="-74.0060" 
+            value="<%= household && household.longitude ? household.longitude : '' %>"
+          />
         </div>
+      </div>
+
+      <div class="form-group">
+        <label for="neighborhood_code">Neighborhood Code *</label>
+        <input 
+          type="text" 
+          id="neighborhood_code" 
+          name="neighborhood_code" 
+          value="<%= household && household.neighborhood_code ? household.neighborhood_code : '' %>" 
+          required 
+        />
+      </div>
     </div>
-</body>
-</html>
+
+    <div class="form-section">
+      <h3 class="form-section-title">Contact Information</h3>
+
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          name="phone" 
+          placeholder="(123) 456-7890" 
+          value="<%= household && household.phone ? household.phone : '' %>"
+        />
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h3 class="form-section-title">Emergency Preparedness Status</h3>
+
+      <div class="form-group">
+        <label>Readiness Level</label>
+        <div class="readiness-level">
+          <div class="readiness-option">
+            <input 
+              type="radio" 
+              id="readiness-low" 
+              name="readiness_level" 
+              value="low" 
+              <%= household && household.readiness_level === 'low' ? 'checked' : '' %>
+            />
+            <label for="readiness-low">🔴 Low - Just Starting</label>
+          </div>
+
+          <div class="readiness-option">
+            <input 
+              type="radio" 
+              id="readiness-medium" 
+              name="readiness_level" 
+              value="medium" 
+              <%= household && household.readiness_level === 'medium' ? 'checked' : '' %>
+            />
+            <label for="readiness-medium">🟡 Medium - Partially Prepared</label>
+          </div>
+
+          <div class="readiness-option">
+            <input 
+              type="radio" 
+              id="readiness-high" 
+              name="readiness_level" 
+              value="high" 
+              <%= household && household.readiness_level === 'high' ? 'checked' : '' %>
+            />
+            <label for="readiness-high">🟢 High - Well Prepared</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Additional Notes</label>
+        <textarea 
+          id="notes" 
+          name="notes" 
+          placeholder="Add any additional information about your household's preparedness or special needs..."
+        ><%= household && household.notes ? household.notes : '' %></textarea>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <a href="/dashboard" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

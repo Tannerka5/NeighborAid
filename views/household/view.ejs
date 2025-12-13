@@ -1,234 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Household Details – NeighborAid</title>
+<%- include('../partials/header') %>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<style>
+  .details-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+  }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
-    }
+  .section-title {
+    font-size: 18px;
+    color: #1e3c72;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-    /* HEADER -------------------------------------------------- */
-    header {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      color: white;
-      padding: 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
 
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
+  .profile-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #fafafa;
+  }
 
-    .logo-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: white;
-    }
+  .profile-label {
+    font-size: 12px;
+    color: #999;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
 
-    .logo-brand img {
-      height: 40px;
-    }
+  .profile-value {
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+  }
 
-    .logo-brand h1 {
-      font-size: 24px;
-      font-weight: 700;
-    }
+  .btn-row {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+  }
 
-    /* MAIN LAYOUT -------------------------------------------- */
-    .content-area {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    /* PAGE HEADER --------------------------------------------- */
-    .page-title {
-      font-size: 32px;
-      color: #1e3c72;
-      font-weight: 700;
-      margin-bottom: 25px;
-    }
-
-    /* DETAIL CARD --------------------------------------------- */
-    .details-card {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      color: #1e3c72;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* PROFILE GRID -------------------------------------------- */
+  @media (max-width: 768px) {
     .profile-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      grid-template-columns: 1fr;
     }
 
-    .profile-item {
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
-      background-color: #fafafa;
-    }
-
-    .profile-label {
-      font-size: 12px;
-      color: #999;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .profile-value {
-      font-size: 16px;
-      color: #333;
-      font-weight: 600;
-    }
-
-    /* BUTTONS -------------------------------------------------- */
     .btn-row {
-      display: flex;
-      gap: 15px;
-      margin-top: 25px;
+      flex-direction: column;
     }
+  }
+</style>
 
-    .primary-btn {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: inline-block;
-    }
+<div class="page-header">
+  <h1>Household Details</h1>
+</div>
 
-    .primary-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(42, 82, 152, 0.3);
-    }
+<div class="details-card">
+  <h3 class="section-title">📋 Profile Information</h3>
 
-    .secondary-btn {
-      background: white;
-      border: 2px solid #2a5298;
-      color: #2a5298;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 14px;
-      transition: background-color 0.2s, color 0.2s;
-    }
-
-    .secondary-btn:hover {
-      background-color: #2a5298;
-      color: white;
-    }
-  </style>
-</head>
-
-<body>
-
-  <!-- HEADER -->
-  <header>
-    <div class="header-content">
-      <a href="/dashboard" class="logo-brand">
-        <img src="/images/NeighborAid Icon.png" alt="NeighborAid">
-        <h1>NeighborAid</h1>
-      </a>
-    </div>
-  </header>
-
-  <!-- CONTENT -->
-  <main class="content-area">
-
-    <h2 class="page-title">Household Details</h2>
-
-    <div class="details-card">
-
-      <h3 class="section-title">Profile Information</h3>
-
-      <div class="profile-grid">
-
-        <div class="profile-item">
-          <div class="profile-label">Address</div>
-          <div class="profile-value"><%= household.address || '—' %></div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Latitude</div>
-          <div class="profile-value"><%= household.latitude || '—' %></div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Longitude</div>
-          <div class="profile-value"><%= household.longitude || '—' %></div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Neighborhood Code</div>
-          <div class="profile-value"><%= household.neighborhood_code || '—' %></div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Phone Number</div>
-          <div class="profile-value"><%= household.phone_number || '—' %></div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Readiness Level</div>
-          <div class="profile-value"><%= household.readiness_level || '—' %></div>
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Notes</div>
-          <div class="profile-value"><%= household.notes || '—' %></div>
-        </div>
-
-      </div>
-
-      <div class="btn-row">
-        <a href="/household/edit/<%= household.id %>" class="primary-btn">Edit Household</a>
-        <a href="/dashboard" class="secondary-btn">Back to Dashboard</a>
-      </div>
-
+  <div class="profile-grid">
+    <div class="profile-item">
+      <div class="profile-label">Address</div>
+      <div class="profile-value"><%= household.address %></div>
     </div>
 
-  </main>
+    <div class="profile-item">
+      <div class="profile-label">Latitude</div>
+      <div class="profile-value"><%= household.latitude || 'Not set' %></div>
+    </div>
 
-</body>
-</html>
+    <div class="profile-item">
+      <div class="profile-label">Longitude</div>
+      <div class="profile-value"><%= household.longitude || 'Not set' %></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Neighborhood Code</div>
+      <div class="profile-value"><%= household.neighborhood_code %></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Phone Number</div>
+      <div class="profile-value"><%= household.phone || 'Not set' %></div>
+    </div>
+
+    <div class="profile-item">
+      <div class="profile-label">Readiness Level</div>
+      <div class="profile-value" style="text-transform: capitalize;"><%= household.readiness_level %></div>
+    </div>
+
+    <% if (household.notes) { %>
+      <div class="profile-item" style="grid-column: 1 / -1;">
+        <div class="profile-label">Notes</div>
+        <div class="profile-value"><%= household.notes %></div>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="btn-row">
+    <a href="/household/edit/<%= household.id %>" class="btn btn-primary">Edit Household</a>
+    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

@@ -4,174 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - NeighborAid</title>
+    <link rel="stylesheet" href="/css/main.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            margin: 0;
             padding: 20px;
         }
 
         .register-container {
             background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
-            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             padding: 40px;
+            width: 100%;
+            max-width: 450px;
         }
 
-        .logo-section {
+        .register-header {
             text-align: center;
             margin-bottom: 30px;
         }
 
-        .logo-section img {
-            height: 60px;
-            margin-bottom: 15px;
-        }
-
-        .logo-section h1 {
-            color: #1e3c72;
-            font-size: 28px;
+        .register-header h1 {
+            color: var(--primary-color);
+            font-size: 2rem;
             margin-bottom: 10px;
         }
 
-        .logo-section p {
-            color: #666;
-            font-size: 14px;
+        .register-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
         .form-group {
             margin-bottom: 20px;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
         }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="tel"],
-        textarea,
-        select {
+        .form-group input,
+        .form-group select {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            transition: border-color 0.3s;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
-        input:focus,
-        textarea:focus,
-        select:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             outline: none;
-            border-color: #2a5298;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 80px;
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
         }
 
-        .password-requirements {
-            background-color: #f5f5f5;
-            border-left: 4px solid #2a5298;
-            padding: 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: #666;
-            margin-top: 8px;
-        }
-
-        .password-requirements ul {
-            margin: 8px 0 0 20px;
-            padding: 0;
-        }
-
-        .password-requirements li {
-            margin: 4px 0;
-        }
-
-        .terms-check {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-            font-size: 13px;
-        }
-
-        .terms-check input[type="checkbox"] {
-            margin-right: 10px;
-            margin-top: 3px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .terms-check label {
-            margin: 0;
-            font-weight: normal;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .terms-check a {
-            color: #2a5298;
-            text-decoration: none;
-        }
-
-        .terms-check a:hover {
-            text-decoration: underline;
-        }
-
-        .register-button {
+        .btn-register {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 14px;
+            background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
-        .register-button:hover {
+        .btn-register:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(42, 82, 152, 0.3);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
         }
 
         .login-link {
             text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
+            margin-top: 25px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .login-link a {
-            color: #2a5298;
+            color: var(--primary-color);
             text-decoration: none;
             font-weight: 600;
         }
@@ -181,45 +120,84 @@
         }
 
         .error-message {
-            background-color: #fee;
+            background: #fee;
             color: #c33;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 12px 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 0.9rem;
             border-left: 4px solid #c33;
         }
 
         .success-message {
-            background-color: #efe;
+            background: #efe;
             color: #3c3;
-            padding: 12px;
-            border-radius: 6px;
+            padding: 12px 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            font-size: 14px;
+            font-size: 0.9rem;
             border-left: 4px solid #3c3;
         }
 
-        @media (max-width: 600px) {
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-color);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            position: relative;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
             .register-container {
-                padding: 30px 20px;
+                padding: 30px 25px;
             }
 
-            .form-row {
-                grid-template-columns: 1fr;
+            .register-header h1 {
+                font-size: 1.75rem;
             }
 
-            .logo-section h1 {
-                font-size: 24px;
+            body {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 25px 20px;
+            }
+
+            .register-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 10px 12px;
             }
         }
     </style>
 </head>
 <body>
     <div class="register-container">
-        <div class="logo-section">
-            <img src="/images/NeighborAid Icon.png" alt="NeighborAid Logo">
-            <h1>Account Registration</h1>
+        <div class="register-header">
+            <h1>Join NeighborAid</h1>
+            <p>Create your account to get started</p>
         </div>
 
         <% if (typeof error !== 'undefined' && error) { %>
@@ -230,67 +208,76 @@
             <div class="success-message"><%= success %></div>
         <% } %>
 
-        <!-- 🔥 FIXED: Correct POST route -->
-        <form method="POST" action="/auth/register" enctype="application/x-www-form-urlencoded">
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="first_name">First Name *</label>
-                    <input
-                        type="text"
-                        id="first_name"
-                        name="first_name"
-                        placeholder="First Name"
-                        autofocus
-                        required
-                    >
-                </div>
-
-                <div class="form-group">
-                    <label for="last_name">Last Name *</label>
-                    <input
-                        type="text"
-                        id="last_name"
-                        name="last_name"
-                        placeholder="Last Name"
-                        required
-                    >
-                </div>
-            </div>
-
+        <form action="/auth/register" method="POST">
             <div class="form-group">
-                <label for="email">Email Address *</label>
-                <input type="email" id="email" name="email" placeholder="Email Address" required>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password *</label>
-                <input type="password" id="password" name="password" placeholder="Password" required>
-            </div>
-
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password *</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
-            </div>
-
-            <div class="form-group">
-                <label for="neighborhood_code">Neighborhood Code *</label>
+                <label for="name">Full Name</label>
                 <input 
                     type="text" 
-                    id="neighborhood_code" 
-                    name="neighborhood_code" 
-                    placeholder="Enter your neighborhood code"
-                    required
+                    id="name" 
+                    name="name" 
+                    required 
+                    placeholder="Enter your full name"
+                    value="<%= typeof formData !== 'undefined' ? formData.name || '' : '' %>"
                 >
             </div>
 
-            <button type="submit" class="register-button">Create Account</button>
-
-            <div class="login-link">
-                <p>Already have an account? <a href="/auth/login">Sign in here</a></p>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    required 
+                    placeholder="Enter your email"
+                    value="<%= typeof formData !== 'undefined' ? formData.email || '' : '' %>"
+                >
             </div>
 
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    placeholder="Create a strong password"
+                    minlength="8"
+                >
+                <small>Must be at least 8 characters long</small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input 
+                    type="password" 
+                    id="confirmPassword" 
+                    name="confirmPassword" 
+                    required 
+                    placeholder="Re-enter your password"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="neighborhood">Neighborhood</label>
+                <select id="neighborhood" name="neighborhood_id" required>
+                    <option value="">Select your neighborhood</option>
+                    <% if (typeof neighborhoods !== 'undefined' && neighborhoods) { %>
+                        <% neighborhoods.forEach(function(neighborhood) { %>
+                            <option value="<%= neighborhood.neighborhood_id %>" 
+                                <%= typeof formData !== 'undefined' && formData.neighborhood_id == neighborhood.neighborhood_id ? 'selected' : '' %>>
+                                <%= neighborhood.name %>
+                            </option>
+                        <% }); %>
+                    <% } %>
+                </select>
+            </div>
+
+            <button type="submit" class="btn-register">Create Account</button>
         </form>
+
+        <div class="login-link">
+            Already have an account? <a href="/auth/login">Sign in here</a>
+        </div>
     </div>
 </body>
 </html>
