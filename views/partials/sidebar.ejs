@@ -29,6 +29,16 @@
       <span class="nav-text">My Household</span>
     </a>
 
+    <a href="/members" class="nav-item <%= currentPage === 'members' ? 'active' : '' %>">
+      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+      </svg>
+      <span class="nav-text">My Neighborhood</span>
+    </a>
+
     <a href="/resources" class="nav-item <%= currentPage === 'resources' ? 'active' : '' %>">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
@@ -54,16 +64,6 @@
         <line x1="16" y1="6" x2="16" y2="22"></line>
       </svg>
       <span class="nav-text">Resource Map</span>
-    </a>
-
-    <a href="/members" class="nav-item <%= currentPage === 'members' ? 'active' : '' %>">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        <circle cx="9" cy="7" r="4"></circle>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-      </svg>
-      <span class="nav-text">Members</span>
     </a>
 
     <a href="/alerts" class="nav-item <%= currentPage === 'alerts' ? 'active' : '' %>">
