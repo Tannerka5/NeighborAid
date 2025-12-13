@@ -4,6 +4,6 @@ const requireLogin = require('../middleware/requireLogin');
 const profileController = require('../controllers/profileController');
 
 router.get('/', requireLogin, profileController.showProfile);
-router.post('/update', requireLogin, profileController.updateProfile);
+router.post('/', requireLogin, profileController.updateProfile); // FIXED: Changed from /update to /
 
 module.exports = router;

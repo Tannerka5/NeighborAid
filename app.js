@@ -14,7 +14,6 @@ const resourcesRoutes = require('./routes/resources');
 const directoryRoutes = require('./routes/directory');
 const alertsRoutes = require('./routes/alerts');
 const membersRoutes = require('./routes/members');
-const settingsRoutes = require('./routes/settings');
 const neighborhoodsRoutes = require('./routes/neighborhoods');
 const profileRoutes = require('./routes/profile');
 
@@ -77,22 +76,16 @@ app.get('/', (req, res) => {
   res.render('landing');
 });
 
-// logout
-app.post('/logout', (req, res) => {
-  req.session.destroy(() => res.redirect('/auth/login'));
-});
-
 // ----------------------
 // ROUTES
 // ----------------------
 app.use('/auth', authRoutes);
-app.use('/dashboard', dashboardRoutes);
+app.use('/dashboard', requireLogin, dashboardRoutes);
 app.use('/household', requireLogin, householdRoutes);
 app.use('/resources', requireLogin, resourcesRoutes);
 app.use('/directory', requireLogin, directoryRoutes);
 app.use('/alerts', requireLogin, alertsRoutes);
 app.use('/members', requireLogin, membersRoutes);
-app.use('/settings', requireLogin, settingsRoutes);
 app.use('/neighborhoods', requireLogin, neighborhoodsRoutes);
 app.use('/profile', requireLogin, profileRoutes);
 

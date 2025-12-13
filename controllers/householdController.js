@@ -108,6 +108,7 @@ exports.showEditForm = async (req, res) => {
     return res.render("household/edit", {
       user: req.session.user,
       household: null,
+      currentPage: 'household',
       error: "Could not load edit form",
       success: null
     });
@@ -194,6 +195,7 @@ exports.updateProfile = async (req, res) => {
     return res.render("household/edit", {
       user: req.session.user,
       household: updated.rows[0],
+      currentPage: 'household',
       error: null,
       success: "Household profile updated successfully!"
     });
@@ -203,6 +205,7 @@ exports.updateProfile = async (req, res) => {
     return res.render("household/edit", {
       user: req.session.user,
       household: null,
+      currentPage: 'household',
       error: "Could not update household",
       success: null
     });

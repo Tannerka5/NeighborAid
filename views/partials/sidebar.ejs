@@ -19,7 +19,6 @@
       <span class="nav-text">Dashboard</span>
     </a>
 
-    <!-- FIXED: Changed to /household/edit -->
     <a href="/household/edit" class="nav-item <%= currentPage === 'household' ? 'active' : '' %>">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -75,12 +74,10 @@
       <span class="nav-text">Profile</span>
     </a>
 
-    <!-- REMOVED: Settings link completely deleted -->
-
   </nav>
 
   <div class="sidebar-footer">
-    <form action="/logout" method="POST" style="margin: 0;">
+    <form action="/auth/logout" method="POST" style="margin: 0;">
       <button type="submit" class="nav-item logout-btn">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

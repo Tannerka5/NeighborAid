@@ -9,8 +9,8 @@ router.get('/', requireLogin, householdController.showHouseholdHome);
 // /household/view  → view details page
 router.get('/view', requireLogin, householdController.showProfile);
 
-// Edit form
-router.get('/edit/:id', requireLogin, householdController.showEditForm);
+// Edit form (FIXED: removed :id parameter)
+router.get('/edit', requireLogin, householdController.showEditForm);
 
 // Save edits
 router.post('/update', requireLogin, householdController.updateProfile);
