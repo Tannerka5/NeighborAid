@@ -455,21 +455,17 @@
                     <div class="nav-icon">📦</div>
                     <span>Resources</span>
                 </a>
-                <a href="/members" class="nav-link">
-                    <div class="nav-icon">👥</div>
-                    <span>Members</span>
-                </a>
             </div>
 
             <div class="nav-section">
                 <div class="nav-section-title">Community</div>
-                <a href="/neighborhoods" class="nav-link">
-                    <div class="nav-icon">🗺️</div>
-                    <span>Neighborhoods</span>
+                <a href="/members" class="nav-link">
+                    <div class="nav-icon">👥</div>
+                    <span>Neighborhood Members</span>
                 </a>
-                <a href="/directory" class="nav-link">
+                <a href="/directory/map" class="nav-link">
                     <div class="nav-icon">📋</div>
-                    <span>Resource Map</span>
+                    <span>Neighborhood/Resource Map</span>
                 </a>
             </div>
 
@@ -495,7 +491,7 @@
                 <div class="card">
                     <div class="card-icon households">🏠</div>
                     <div class="card-title">Household Status</div>
-                    <div class="card-value"><span class="readiness-indicator <%= user.household ? 'readiness-' + (user.household.readinessLevel || 'low') : 'readiness-low' %>"></span></div>
+                    <div class="card-value"><span class="readiness-indicator <%= user.household ? 'readiness-' + (user.household.readiness_level || 'low') : 'readiness-low' %>"></span></div>
                     <a href="/household/view" class="card-action">View Details →</a>
                 </div>
 
@@ -508,9 +504,9 @@
 
                 <div class="card">
                     <div class="card-icon neighborhoods">🗺️</div>
-                    <div class="card-title">Neighborhoods</div>
+                    <div class="card-title">Neighborhood/Resource Map</div>
                     <div class="card-value"><%= neighborhoods ? neighborhoods.length : 0 %></div>
-                    <a href="/neighborhoods" class="card-action">View Map →</a>
+                    <a href="/directory/map" class="card-action">View Map →</a>
                 </div>
 
                 <div class="card">
@@ -523,7 +519,7 @@
 
             <div class="household-profile-section">
                 <h3 class="section-title">
-                    <span class="readiness-indicator <%= user.household ? 'readiness-' + (user.household.readinessLevel || 'low') : 'readiness-low' %>"></span>
+                    <span class="readiness-indicator <%= user.household ? 'readiness-' + (user.household.readiness_level || 'low') : 'readiness-low' %>"></span>
                     Household Profile
                 </h3>
                 
@@ -534,7 +530,7 @@
                     </div>
                     <div class="profile-item">
                         <div class="profile-label">Phone</div>
-                        <div class="profile-value"><%= user.household ? (user.household.phoneNumber || 'Not Set') : 'Not Set' %></div>
+                        <div class="profile-value"><%= user.household ? (user.household.phone_number || 'Not Set') : 'Not Set' %></div>
                     </div>
                     <div class="profile-item">
                         <div class="profile-label">Household Members</div>

@@ -46,7 +46,7 @@ exports.showRegister = (req, res) => {
 };
 
 exports.handleRegister = async (req, res) => {
-  const { first_name, last_name, email, password, confirm_password } = req.body;
+  const { first_name, last_name, email, password, confirm_password, neighborhood_code } = req.body;
 
   // Password match
   if (password !== confirm_password) {
@@ -81,13 +81,13 @@ exports.handleRegister = async (req, res) => {
     // -------------------------------
     await db.query(
       `
-      INSERT INTO households (user_id)
-      SELECT $1
+      INSERT INTO households (user_id, neighborhood_code)
+      SELECT $1, $2
       WHERE NOT EXISTS (
         SELECT 1 FROM households WHERE user_id = $1
       );
       `,
-      [userId]
+      [userId, neighborhood_code]
     );
     // -------------------------------
 

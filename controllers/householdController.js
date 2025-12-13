@@ -24,6 +24,8 @@ exports.showProfile = async (req, res) => {
 
     const household = householdResult.rows[0] || null;
 
+    console.log("HOUSEHOLD LOADED FOR VIEW:", household);
+
     // Load user/owner info
     const userResult = await db.query(
       "SELECT first_name, last_name, email FROM users WHERE id=$1",
@@ -115,6 +117,8 @@ exports.showEditForm = async (req, res) => {
  * UPDATE HOUSEHOLD PROFILE
  */
 exports.updateProfile = async (req, res) => {
+  console.log("UPDATE HOUSEHOLD HIT");
+  console.log("RAW req.body:", req.body);
   try {
     const userId = req.session.user.id;
 
@@ -122,10 +126,33 @@ exports.updateProfile = async (req, res) => {
       address,
       latitude,
       longitude,
-      phoneNumber,
-      readinessLevel,
+      neighborhood_code,
+      phone_number,
+      readiness_level,
       notes
     } = req.body;
+
+    console.log("PARSED FIELDS:", {
+      address,
+      latitude,
+      longitude,
+      neighborhood_code,
+      phone_number,
+      readiness_level,
+      notes,
+      userId
+    });
+
+    console.log("ABOUT TO UPDATE WITH:", [
+      address || null,
+      latitude || null,
+      longitude || null,
+      neighborhood_code || null,
+      phone_number || null,
+      readiness_level || null,
+      notes || null,
+      userId
+    ]);
 
     await db.query(
       `
@@ -135,19 +162,27 @@ exports.updateProfile = async (req, res) => {
           longitude=$3,
           phone_number=$4,
           readiness_level=$5,
-          notes=$6
-      WHERE user_id=$7
+          notes=$6,
+          neighborhood_code = $7
+      WHERE user_id=$8
       `,
       [
         address || null,
         latitude || null,
         longitude || null,
-        phoneNumber || null,
-        readinessLevel || null,
+        phone_number || null,
+        readiness_level || null,
         notes || null,
+        neighborhood_code || null,
         userId
       ]
     );
+    const verify = await db.query(
+      "SELECT * FROM households WHERE user_id = $1",
+      [userId]
+    );
+
+    console.log("DB STATE AFTER UPDATE:", verify.rows[0]);
 
     // Reload updated data
     const updated = await db.query(

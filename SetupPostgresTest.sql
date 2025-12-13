@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS households (
     id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     address VARCHAR(255),
+    neighborhood_code VARCHAR(50),
     latitude NUMERIC(9,6),
     longitude NUMERIC(9,6),
     phone_number VARCHAR(50),
