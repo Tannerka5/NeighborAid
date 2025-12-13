@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 
 exports.showProfile = (req, res) => {
   res.render("profile", {
-    user: req.session.user
+    user: req.session.user,
+    currentPage: 'profile'
   });
 };
 

@@ -53,6 +53,7 @@ exports.listResources = async (req, res) => {
     return res.render("resources/list", {
       user,
       resources: formatted,
+      currentPage: 'resources',
       error: null,
       success: null
     });
@@ -81,6 +82,7 @@ exports.showAddForm = async (req, res) => {
     resourceTypes: types.rows,
     isEdit: false,
     resource: null,
+    currentPage: 'resources',
     selectedType: null,
     error: null,
     success: null
@@ -154,6 +156,7 @@ exports.showEditForm = async (req, res) => {
     return res.render("resources/form", {
       user,
       resource,
+      currentPage: 'resources',
       resourceTypes: types.rows,
       isEdit: true,
       error: null,

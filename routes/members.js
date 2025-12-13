@@ -46,7 +46,8 @@ router.get('/', async (req, res) => {
     res.render('members', {
       user: req.user,
       members,
-      neighborhood_code: code
+      neighborhood_code: code,
+      currentPage: 'members'
     });
 
   } catch (err) {

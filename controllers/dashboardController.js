@@ -50,7 +50,8 @@ exports.showDashboard = async (req, res) => {
       household,
       resources: formattedResources,
       neighborhoods: [],
-      householdMembers: []
+      householdMembers: [],
+      currentPage: 'dashboard'
     });
 
   } catch (err) {

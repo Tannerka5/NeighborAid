@@ -1,7 +1,8 @@
 exports.listSkills = (req, res) => {
     res.render('skills/list', {
         user: { firstName: 'Demo' },
-        skills: []
+        skills: [],
+        currentPage: 'skills'
     });
 };
 

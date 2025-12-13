@@ -56,7 +56,8 @@ exports.listHouseholds = async (req, res) => {
     // 5. Render directory
     res.render("directory", {
       user: req.user,
-      households
+      households,
+      currentPage: 'directory'
     });
 
   } catch (error) {

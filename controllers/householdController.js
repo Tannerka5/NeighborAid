@@ -98,8 +98,9 @@ exports.showEditForm = async (req, res) => {
     return res.render("household/edit", {
       user: req.session.user,
       household,
+      currentPage: 'household',
       error: null,
-      success: null
+      success: null,
     });
 
   } catch (err) {

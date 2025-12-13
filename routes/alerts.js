@@ -4,7 +4,8 @@ const requireLogin = require('../middleware/requireLogin');
 
 router.get('/', requireLogin, (req, res) => {
   res.render('alerts', {
-    user: req.user
+    user: req.user,
+    currentPage: 'alerts'
   });
 });
 
