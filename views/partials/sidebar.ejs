@@ -1,8 +1,10 @@
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header">
-    <img src="/images/NeighborAid Icon.png" alt="NeighborAid" class="sidebar-logo">
-    <span class="sidebar-title">NeighborAid</span>
+    <a href="/dashboard" class="nav-item <%= currentPage === 'dashboard' ? 'active' : '' %>">
+        <img src="/images/NeighborAid Icon.png" alt="NeighborAid" class="sidebar-logo">
+        <span class="sidebar-title">NeighborAid</span>
+    </a>
     <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
       <span class="toggle-icon">‹</span>
     </button>
@@ -38,7 +40,7 @@
     <a href="/directory" class="nav-item <%= currentPage === 'directory' ? 'active' : '' %>">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-        ircle cx="9" cy="7" r="4"></circle>
+        <circle cx="9" cy="7" r="4"></circle>
         <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
       </svg>
@@ -56,7 +58,7 @@
     <% if (user && user.role === 'admin') { %>
     <a href="/neighborhoods" class="nav-item <%= currentPage === 'neighborhoods' ? 'active' : '' %>">
       <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        ircle cx="12" cy="12" r="10"></circle>
+        <circle cx="12" cy="12" r="10"></circle>
         <line x1="2" y1="12" x2="22" y2="12"></line>
         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
       </svg>
