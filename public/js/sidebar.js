@@ -2,123 +2,163 @@
 document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const toggleBtn = document.getElementById('sidebarToggle');
-    const closeBtn = document.getElementById('closeSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
     const mainContent = document.querySelector('.main-content');
-    const mobileToggle = document.getElementById('mobileSidebarToggle');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 
     function openSidebar() {
         if (window.innerWidth > 768) {
-            // Desktop behavior
-            sidebar.classList.add('expanded');
+            // Desktop behavior - remove collapsed class
+            sidebar.classList.remove('collapsed');
             if (mainContent) {
-                mainContent.style.marginLeft = '250px';
+                mainContent.style.marginLeft = '260px';
             }
         } else {
-            // Mobile behavior - overlay
-            sidebar.classList.add('expanded');
+            // Mobile behavior - add open class for overlay
+            sidebar.classList.add('open');
+            if (overlay) {
+                overlay.classList.add('active');
+            }
+            document.body.style.overflow = 'hidden';
         }
     }
 
     function closeSidebar() {
-        sidebar.classList.remove('expanded');
-        if (mainContent && window.innerWidth > 768) {
-            mainContent.style.marginLeft = '60px';
+        if (window.innerWidth > 768) {
+            // Desktop behavior - add collapsed class
+            sidebar.classList.add('collapsed');
+            if (mainContent) {
+                mainContent.style.marginLeft = '70px';
+            }
+        } else {
+            // Mobile behavior - remove open class
+            sidebar.classList.remove('open');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
         }
     }
 
+    // Desktop toggle button
     if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            if (sidebar.classList.contains('expanded')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        });
-    }
-
-    if (mobileToggle) {
-        mobileToggle.addEventListener('click', function() {
-            if (sidebar.classList.contains('expanded')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        });
-    }
-
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeSidebar);
-    }
-
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(event) {
-        if (window.innerWidth <= 768) {
-            const isClickInsideSidebar = sidebar.contains(event.target);
-            const isToggleButton = event.target.closest('#mobileSidebarToggle');
+        toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             
-            if (!isClickInsideSidebar && !isToggleButton && sidebar.classList.contains('expanded')) {
+            if (sidebar.classList.contains('collapsed')) {
+                openSidebar();
+            } else {
                 closeSidebar();
             }
-        }
+        });
+    }
+
+    // Mobile menu button
+    if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (sidebar.classList.contains('open')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        });
+    }
+
+    // Close sidebar when clicking overlay (mobile)
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            closeSidebar();
+        });
+    }
+
+    // Close sidebar when clicking a nav link on mobile
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        });
     });
 
     // Initialize sidebar state on page load
     if (window.innerWidth > 768) {
-        // Desktop: start collapsed (60px)
+        // Desktop: start collapsed
+        sidebar.classList.add('collapsed');
         if (mainContent) {
-            mainContent.style.marginLeft = '60px';
+            mainContent.style.marginLeft = '70px';
         }
     } else {
-        // Mobile: no margin
+        // Mobile: ensure it's closed
+        sidebar.classList.remove('open');
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
         if (mainContent) {
             mainContent.style.marginLeft = '0';
         }
     }
 
     // Handle window resize
+    let resizeTimer;
     window.addEventListener('resize', function() {
-        if (window.innerWidth > 768) {
-            if (sidebar.classList.contains('expanded')) {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (window.innerWidth > 768) {
+                // Desktop mode
+                sidebar.classList.remove('open');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                document.body.style.overflow = '';
+                
+                const isCollapsed = sidebar.classList.contains('collapsed');
                 if (mainContent) {
-                    mainContent.style.marginLeft = '250px';
+                    if (isCollapsed) {
+                        mainContent.style.marginLeft = '70px';
+                    } else {
+                        mainContent.style.marginLeft = '260px';
+                    }
                 }
             } else {
+                // Mobile mode
+                sidebar.classList.remove('collapsed');
                 if (mainContent) {
-                    mainContent.style.marginLeft = '60px';
+                    mainContent.style.marginLeft = '0';
                 }
             }
-        } else {
-            if (mainContent) {
-                mainContent.style.marginLeft = '0';
-            }
-        }
+        }, 100);
     });
 
     // Set active navigation item based on current path
     const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.nav-link');
+    const navItems2 = document.querySelectorAll('.nav-item');
     
-    navLinks.forEach(link => {
-        const href = link.getAttribute('href');
+    navItems2.forEach(item => {
+        const href = item.getAttribute('href');
         
         // Remove active class from all links first
-        link.classList.remove('active');
+        item.classList.remove('active');
         
         // Exact match for specific routes
         if (currentPath === href) {
-            link.classList.add('active');
+            item.classList.add('active');
         }
-        // Special handling for map route - only match exact /map path
-        else if (href === '/map' && currentPath === '/map') {
-            link.classList.add('active');
+        // Special handling for map route - only match exact /directory/map path
+        else if (href === '/directory/map' && currentPath === '/directory/map') {
+            item.classList.add('active');
         }
-        // For directory, match /directory but NOT /map
-        else if (href === '/directory' && currentPath.startsWith('/directory') && !currentPath.startsWith('/map')) {
-            link.classList.add('active');
+        // For directory, match /directory but NOT /directory/map
+        else if (href === '/directory' && currentPath.startsWith('/directory') && currentPath !== '/directory/map') {
+            item.classList.add('active');
         }
         // For other routes, check if current path starts with the link href
-        else if (href !== '/' && href !== '/map' && href !== '/directory' && currentPath.startsWith(href)) {
-            link.classList.add('active');
+        else if (href !== '/' && href !== '/directory/map' && href !== '/directory' && currentPath.startsWith(href)) {
+            item.classList.add('active');
         }
     });
 });
