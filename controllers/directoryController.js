@@ -1,157 +1,76 @@
 const db = require('../db/query');
 
-exports.listHouseholds = async (req, res) => {
+exports.showDirectory = async (req, res) => {
   try {
-    // 1. Get all households + user names
-    const householdsResult = await db.query(`
-      SELECT 
-        h.*,
-        u.first_name,
-        u.last_name
-      FROM households h
-      JOIN users u ON h.user_id = u.id
-    `);
+    const userId = req.session.user.id;
 
-    const households = householdsResult.rows;
-
-    // 2. Get all resources and their types
-    const resourcesResult = await db.query(`
-      SELECT 
-        r.id,
-        r.household_id,
-        r.quantity,
-        r.description,
-        r.is_available,
-        rt.name AS type_name,
-        rt.category AS type_category
-      FROM resources r
-      JOIN resource_types rt ON r.resource_type_id = rt.id
-    `);
-
-    // 3. Group resources by household_id
-    const resourcesByHousehold = {};
-
-    resourcesResult.rows.forEach(r => {
-      if (!resourcesByHousehold[r.household_id]) {
-        resourcesByHousehold[r.household_id] = [];
-      }
-
-      resourcesByHousehold[r.household_id].push({
-        id: r.id,
-        quantity: r.quantity,
-        description: r.description,
-        is_available: r.is_available,
-        resourceType: {
-          name: r.type_name,
-          category: r.type_category
-        }
-      });
-    });
-
-    // 4. Attach resources to each household object
-    households.forEach(h => {
-      h.resources = resourcesByHousehold[h.id] || [];
-    });
-
-    // 5. Render directory
-    res.render("directory", {
-      user: req.user,
-      households,
-      currentPage: 'directory'
-    });
-
-  } catch (error) {
-    console.log("DIRECTORY ERROR:", error);
-    res.render("directory", {
-      user: req.user,
-      households: [],
-      error: "Unexpected error loading directory."
-    });
-  }
-};
-
-exports.showMap = async (req, res) => {
-  try {
-    res.render("directory/map", {
-      user: req.user
-    });
-  } catch (error) {
-    console.log("MAP VIEW ERROR:", error);
-    res.redirect("/dashboard");
-  }
-};
-
-exports.getMapData = async (req, res) => {
-  try {
-    const userId = req.user.id;
-
-    // Get current user's neighborhood
+    // Get user's neighborhood
     const userHouseholdResult = await db.query(
-      "SELECT neighborhood_code FROM households WHERE user_id = $1",
+      'SELECT neighborhood_code FROM households WHERE user_id = $1',
       [userId]
     );
 
-    if (userHouseholdResult.rows.length === 0) {
-      return res.json([]);
+    if (!userHouseholdResult.rows.length) {
+      return res.render('directory/directory', {
+        households: [],
+        message: 'Please set up your household profile first.',
+        currentPage: 'directory'
+      });
     }
 
     const neighborhoodCode = userHouseholdResult.rows[0].neighborhood_code;
 
-    // Get neighborhood centroid for fallback coordinates
-    const centroidResult = await db.query(
-      `
+    if (!neighborhoodCode) {
+      return res.render('directory/directory', {
+        households: [],
+        message: 'Please add a neighborhood code to your household profile.',
+        currentPage: 'directory'
+      });
+    }
+
+    // Get all households in the same neighborhood with their resources
+    const householdsQuery = `
       SELECT 
-        AVG(latitude) AS center_lat,
-        AVG(longitude) AS center_lng
-      FROM households
-      WHERE neighborhood_code = $1
-        AND latitude IS NOT NULL
-        AND longitude IS NOT NULL
-      `,
-      [neighborhoodCode]
-    );
-
-    const centerLat = centroidResult.rows[0].center_lat;
-    const centerLng = centroidResult.rows[0].center_lng;
-
-    // Fetch households + resources in same neighborhood
-    const mapDataResult = await db.query(
-      `
-       SELECT
-        h.id AS household_id,
-        u.first_name AS first_name,
-        u.last_name AS last_name,
-        COALESCE(h.latitude, $2) AS latitude,
-        COALESCE(h.longitude, $3) AS longitude,
+        h.id,
+        h.address,
+        h.phone,
+        u.first_name,
+        u.last_name,
+        u.email,
         h.neighborhood_code,
         COALESCE(
           json_agg(
             json_build_object(
-              'id', r.id,
-              'resource_type_id', r.resource_type_id,
+              'name', rt.name,
+              'category', rt.category,
               'quantity', r.quantity,
-              'description', r.description,
-              'is_available', r.is_available,
-              'resource_name', rt.name,
-              'category', rt.category
+              'available', r.available
             )
-          ) FILTER (WHERE r.is_available = true),
+          ) FILTER (WHERE r.id IS NOT NULL),
           '[]'
-        ) AS resources
+        ) as resources
       FROM households h
-      JOIN users u ON u.id = h.user_id
-      LEFT JOIN resources r ON r.household_id = h.id
-      LEFT JOIN resource_types rt ON rt.id = r.resource_type_id
-      WHERE h.neighborhood_code = $1
-      GROUP BY h.id, u.first_name, u.last_name
-      `,
-      [neighborhoodCode, centerLat, centerLng]
-    );
+      JOIN users u ON h.user_id = u.id
+      LEFT JOIN resources r ON h.id = r.household_id AND r.available = true
+      LEFT JOIN resource_types rt ON r.resource_type_id = rt.id
+      WHERE h.neighborhood_code = $1 AND h.user_id != $2
+      GROUP BY h.id, h.address, h.phone, u.first_name, u.last_name, u.email, h.neighborhood_code
+      ORDER BY u.last_name, u.first_name
+    `;
 
-    res.json(mapDataResult.rows);
+    const result = await db.query(householdsQuery, [neighborhoodCode, userId]);
+
+    res.render('directory/directory', {
+      households: result.rows,
+      currentPage: 'directory'
+    });
 
   } catch (error) {
-    console.log("MAP DATA ERROR:", error);
-    res.status(500).json({ error: "Failed to load map data" });
+    console.error('Directory error:', error);
+    res.status(500).render('error', {
+      error: 'Failed to load directory',
+      message: error.message,
+      currentPage: 'directory'
+    });
   }
 };

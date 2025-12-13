@@ -1,239 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Profile – NeighborAid</title>
+<%- include('../partials/header') %>
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
-    }
-
-    header {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      color: white;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    .logo-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: white;
-    }
-
-    .logo-brand img {
-      height: 40px;
-    }
-
-    .logo-brand h1 {
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .content-area {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-
-    .page-title {
-      font-size: 32px;
-      color: #1e3c72;
-      font-weight: 700;
-      margin-bottom: 25px;
-    }
-
-    .details-card {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      margin-bottom: 30px;
-    }
-
-    .section-title {
-      font-size: 18px;
-      color: #1e3c72;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
-
-    .profile-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .profile-item {
-      border: 1px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 15px;
-      background-color: #fafafa;
-    }
-
-    .profile-label {
-      font-size: 12px;
-      color: #999;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    .profile-value {
-      font-size: 16px;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .edit-input {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      display: none;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 15px;
-      margin-top: 25px;
-    }
-
-    .primary-btn {
-      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    .secondary-btn {
-      background: white;
-      border: 2px solid #2a5298;
-      color: #2a5298;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 14px;
-    }
-  </style>
-</head>
-
-<body>
-
-<header>
-  <div class="header-content">
-    <a href="/dashboard" class="logo-brand">
-      <img src="/images/NeighborAid Icon.png" alt="NeighborAid">
-      <h1>NeighborAid</h1>
-    </a>
+<div class="page-header">
+  <div>
+    <h1>Profile Settings</h1>
+    <p class="page-subtitle">Manage your account information</p>
   </div>
-</header>
+</div>
 
-<main class="content-area">
+<!-- Alert Messages -->
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-error">
+    <%= error %>
+  </div>
+<% } %>
 
-  <h2 class="page-title">My Profile</h2>
+<% if (typeof success !== 'undefined' && success) { %>
+  <div class="alert alert-success">
+    <%= success %>
+  </div>
+<% } %>
 
-  <div class="details-card">
-    <h3 class="section-title">Account Information</h3>
-
-    <form id="profileForm">
-
-      <div class="profile-grid">
-
-        <div class="profile-item">
-          <div class="profile-label">First Name</div>
-          <div class="profile-value view"><%= user.first_name %></div>
-          <input class="edit-input" name="first_name" value="<%= user.first_name %>">
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Last Name</div>
-          <div class="profile-value view"><%= user.last_name %></div>
-          <input class="edit-input" name="last_name" value="<%= user.last_name %>">
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Email</div>
-          <div class="profile-value view"><%= user.email %></div>
-          <input class="edit-input" name="email" value="<%= user.email %>">
-        </div>
-
-        <div class="profile-item">
-          <div class="profile-label">Password</div>
-          <div class="profile-value view">••••••••</div>
-          <input class="edit-input" type="password" name="password" placeholder="New password">
-        </div>
-
+<!-- Profile Form -->
+<div class="form-card">
+  <form action="/profile" method="POST">
+    
+    <div class="form-section">
+      <h3 class="form-section-title">Personal Information</h3>
+      
+      <div class="form-group">
+        <label for="first_name" class="form-label required">First Name</label>
+        <input 
+          type="text" 
+          id="first_name" 
+          name="first_name" 
+          class="form-input" 
+          value="<%= user.first_name %>"
+          required
+        >
       </div>
 
-      <div class="btn-row">
-        <button type="button" id="editBtn" class="primary-btn">Edit Profile</button>
-        <button type="submit" id="saveBtn" class="primary-btn" style="display:none;">Save Changes</button>
-        <a href="/dashboard" class="secondary-btn">Back to Dashboard</a>
+      <div class="form-group">
+        <label for="last_name" class="form-label required">Last Name</label>
+        <input 
+          type="text" 
+          id="last_name" 
+          name="last_name" 
+          class="form-input" 
+          value="<%= user.last_name %>"
+          required
+        >
       </div>
 
-    </form>
-  </div>
+      <div class="form-group">
+        <label for="email" class="form-label required">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          class="form-input" 
+          value="<%= user.email %>"
+          required
+        >
+      </div>
+    </div>
 
-</main>
-
-<script>
-  const editBtn = document.getElementById("editBtn");
-  const saveBtn = document.getElementById("saveBtn");
-  const views = document.querySelectorAll(".view");
-  const inputs = document.querySelectorAll(".edit-input");
-
-  editBtn.addEventListener("click", () => {
-    views.forEach(v => v.style.display = "none");
-    inputs.forEach(i => i.style.display = "block");
-    editBtn.style.display = "none";
-    saveBtn.style.display = "inline-block";
-  });
-
-  document.getElementById("profileForm").addEventListener("submit", async e => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const payload = Object.fromEntries(formData.entries());
-
-    const res = await fetch("/profile/update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-
-    if (res.ok) location.reload();
-    else alert("Failed to update profile");
-  });
-</script>
-
-</body>
-</html>
+    <div class="form-section">
+      <h3 class="form-section-title">Change Password (Optional)</h3>
+      <p class="

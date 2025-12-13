@@ -1,75 +1,90 @@
-const db = require("../db/query");
-const bcrypt = require("bcryptjs");
+const db = require('../db/query');
 
-exports.showProfile = (req, res) => {
-  res.render("profile", {
-    user: req.session.user,
-    currentPage: 'profile'
-  });
+exports.showProfile = async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+
+    // Get current user data
+    const userResult = await db.query(
+      'SELECT id, email, first_name, last_name, role FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (!userResult.rows.length) {
+      return res.redirect('/auth/login');
+    }
+
+    const user = userResult.rows[0];
+
+    res.render('profile/profile', {
+      user: user,
+      currentPage: 'profile',
+      success: req.query.success,
+      error: req.query.error
+    });
+
+  } catch (error) {
+    console.error('Profile load error:', error);
+    res.status(500).send('Server error');
+  }
 };
 
 exports.updateProfile = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { first_name, last_name, email, password } = req.body;
+    const userId = req.session.user.id;
+    const { first_name, last_name, email, current_password, new_password, confirm_password } = req.body;
 
-    // Basic validation
+    // Validate required fields
     if (!first_name || !last_name || !email) {
-      return res.status(400).json({ error: "Missing required fields" });
+      return res.redirect('/profile?error=All fields are required');
     }
 
-    // Check email uniqueness (excluding current user)
-    const emailCheck = await db.query(
-      "SELECT id FROM users WHERE email = $1 AND id <> $2",
-      [email, userId]
-    );
+    // If changing password, validate
+    if (new_password || confirm_password || current_password) {
+      if (!current_password) {
+        return res.redirect('/profile?error=Current password required to change password');
+      }
 
-    if (emailCheck.rows.length > 0) {
-      return res.status(400).json({ error: "Email already in use" });
-    }
+      if (new_password !== confirm_password) {
+        return res.redirect('/profile?error=New passwords do not match');
+      }
 
-    let query;
-    let values;
+      // Verify current password
+      const userResult = await db.query(
+        'SELECT password FROM users WHERE id = $1',
+        [userId]
+      );
 
-    // Update with password
-    if (password && password.trim() !== "") {
-      const hashed = await bcrypt.hash(password, 10);
+      const bcrypt = require('bcrypt');
+      const validPassword = await bcrypt.compare(current_password, userResult.rows[0].password);
 
-      query = `
-        UPDATE users
-        SET first_name = $1,
-            last_name = $2,
-            email = $3,
-            password_hash = $4
-        WHERE id = $5
-      `;
+      if (!validPassword) {
+        return res.redirect('/profile?error=Current password is incorrect');
+      }
 
-      values = [first_name, last_name, email, hashed, userId];
-
+      // Hash new password and update
+      const hashedPassword = await bcrypt.hash(new_password, 10);
+      await db.query(
+        'UPDATE users SET first_name = $1, last_name = $2, email = $3, password = $4 WHERE id = $5',
+        [first_name, last_name, email, hashedPassword, userId]
+      );
     } else {
-      // Update without password
-      query = `
-        UPDATE users
-        SET first_name = $1,
-            last_name = $2,
-            email = $3
-        WHERE id = $4
-      `;
-
-      values = [first_name, last_name, email, userId];
+      // Update without password change
+      await db.query(
+        'UPDATE users SET first_name = $1, last_name = $2, email = $3 WHERE id = $4',
+        [first_name, last_name, email, userId]
+      );
     }
 
-    await db.query(query, values);
-
-    // Keep session in sync
+    // Update session
     req.session.user.first_name = first_name;
     req.session.user.last_name = last_name;
     req.session.user.email = email;
 
-    res.json({ success: true });
+    res.redirect('/profile?success=Profile updated successfully');
 
-  } catch (err) {
-    console.log("PROFILE UPDATE ERROR:", err);
-    res.status(500).json({ error: "Failed to update profile" });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.redirect('/profile?error=Failed to update profile');
   }
 };
