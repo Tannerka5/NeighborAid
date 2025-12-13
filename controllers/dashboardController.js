@@ -11,9 +11,7 @@ exports.showDashboard = async (req, res) => {
         phone_number AS phone,
         neighborhood_code,
         readiness_level,
-        notes,
-        created_at,
-        updated_at
+        notes
       FROM households 
       WHERE user_id = $1`,
       [req.user.id]
