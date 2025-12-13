@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>NeighborAid</title>
   
   <!-- Stylesheets -->
@@ -10,7 +10,11 @@
   <link rel="stylesheet" href="/css/main.css">
   
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="/images/NeighborAid-Icon.jpg">
+  <link rel="icon" type="image/png" href="/images/NeighborAid Icon.png">
+  
+  <!-- Safari-specific meta tag for safe areas -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 </head>
 <body>
   
@@ -24,7 +28,7 @@
       </svg>
     </button>
     <div class="mobile-header-title">
-      <img src="/images/NeighborAid-Icon.jpg" alt="NeighborAid" class="mobile-logo">
+      <img src="/images/NeighborAid Icon.png" alt="NeighborAid" class="mobile-logo">
       <span>NeighborAid</span>
     </div>
   </div>
