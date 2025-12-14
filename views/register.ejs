@@ -277,15 +277,15 @@
       </div>
 
       <div class="form-group">
-        <label for="neighborhood_id">Neighborhood ID</label>
+        <label for="neighborhood_code">Neighborhood Code</label>
         <input 
-          type="number" 
-          id="neighborhood_id" 
-          name="neighborhood_id" 
+          type="text" 
+          id="neighborhood_code" 
+          name="neighborhood_code" 
           placeholder="Enter neighborhood number"
           min="1"
           required 
-          value="<%= typeof formData !== 'undefined' ? formData.neighborhood_id || '' : '' %>"
+          value="<%= typeof formData !== 'undefined' ? formData.neighborhood_code || '' : '' %>"
         />
         <small>Enter the numeric ID for your neighborhood</small>
       </div>
