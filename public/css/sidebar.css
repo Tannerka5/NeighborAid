@@ -368,8 +368,13 @@ body:not(.mobile) .sidebar.collapsed ~ .main-content,
     margin-left: 0 !important;
     width: 100% !important;
     padding: 16px;
-    padding-top: 80px;
+    padding-top: 80px !important;
     padding-bottom: 24px;
+  }
+
+  /* Fix for page-header being covered */
+  .page-header {
+    margin-top: 0;
   }
 
   .sidebar-overlay {
@@ -410,8 +415,13 @@ body:not(.mobile) .sidebar.collapsed ~ .main-content,
 
   .main-content {
     padding: 12px;
-    padding-top: 72px;
+    padding-top: 72px !important;
     padding-bottom: 20px;
+  }
+  
+  /* Fix for page-header being covered on small screens */
+  .page-header {
+    margin-top: 0;
   }
 
   .sidebar-header {
