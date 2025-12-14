@@ -11,20 +11,38 @@
 <!-- Dashboard Stats Grid -->
 <div class="dashboard-grid">
   <!-- Household Status Card -->
-  <div class="card">
-    <div class="card-icon households" style="background-color: #e8f5e9; color: #43a047;">🏠</div>
+  <div class="card card-highlight">
+    <div class="card-icon households" style="background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%); color: white; box-shadow: 0 4px 10px rgba(67, 160, 71, 0.3);">🏠</div>
     <div class="card-title">Household Status</div>
-    <div class="card-value">
-      <span class="readiness-indicator <%= household ? 'readiness-' + household.readiness_level : 'readiness-low' %>"></span>
-      <% if (household) { %>
-        <span style="font-size: 16px; margin-left: 10px; text-transform: capitalize;">
-          <%= household.readiness_level || 'Low' %>
-        </span>
-      <% } else { %>
-        <span style="font-size: 16px; margin-left: 10px;">Not Set</span>
-      <% } %>
+    <div class="card-value" style="flex-direction: column; align-items: flex-start;">
+      <div style="display: flex; align-items: baseline; gap: 8px;">
+        <span style="font-size: 28px; color: #43a047; font-weight: 700;">Your Readiness Is</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 12px; margin-top: 5px;">
+        <% if (household) { %>
+          <% 
+            let readinessEmoji = '😟';
+            let readinessColor = '#f44336';
+            const level = household.readiness_level || 'low';
+            if (level === 'high') {
+              readinessEmoji = '😊';
+              readinessColor = '#4caf50';
+            } else if (level === 'medium') {
+              readinessEmoji = '😐';
+              readinessColor = '#ff9800';
+            }
+          %>
+          <span style="font-size: 40px;"><%= readinessEmoji %></span>
+          <span style="font-size: 32px; color: <%= readinessColor %>; font-weight: 800; text-transform: capitalize;">
+            <%= level %>
+          </span>
+        <% } else { %>
+          <span style="font-size: 40px;">😟</span>
+          <span style="font-size: 32px; color: #f44336; font-weight: 800;">Not Set</span>
+        <% } %>
+      </div>
     </div>
-    <a href="/household/edit" class="card-action">View Details →</a>
+    <a href="/household/edit" class="card-action" style="color: #43a047;">View Details →</a>
   </div>
 
   <!-- Resources Card -->
@@ -53,7 +71,7 @@
       </div>
       <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 5px;">
         <span style="font-size: 40px; color: #1e3c72; font-weight: 800;"><%= neighborhoodResourceCount || 0 %></span>
-        <span style="font-size: 20px; color: #666; font-weight: 600;">Resource<%= (neighborhoodResourceCount && neighborhoodResourceCount !== 1) ? 's' : '' %></span>
+        <span style="font-size: 20px; color: #666; font-weight: 600;">Resource<%= (neighborhoodResourceCount !== 1) ? 's' : '' %></span>
       </div>
     </div>
     <a href="/directory/map" class="card-action" style="color: #1976d2;">View Map →</a>
@@ -75,7 +93,7 @@
       </div>
       <div class="profile-item">
         <div class="profile-label">Phone</div>
-        <div class="profile-value"><%= household.phone_number || 'Not Set' %></div>
+        <div class="profile-value"><%= household.phone || 'Not Set' %></div>
       </div>
       <div class="profile-item">
         <div class="profile-label">Neighborhood Code</div>
@@ -208,7 +226,6 @@
   </ul>
 </div>
 
-<!-- Add styles from original dashboard -->
 <style>
   .dashboard-grid {
     display: grid;
