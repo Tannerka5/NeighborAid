@@ -63,11 +63,25 @@ exports.showDashboard = async (req, res) => {
        GROUP BY neighborhood_code`
     );
 
+    // Get neighborhood resource count
+    let neighborhoodResourceCount = 0;
+    if (household && household.neighborhood_code) {
+      const neighborhoodResourceResult = await db.query(
+        `SELECT COUNT(*) as count 
+         FROM resources r
+         JOIN households h ON r.household_id = h.id
+         WHERE h.neighborhood_code = $1`,
+        [household.neighborhood_code]
+      );
+      neighborhoodResourceCount = parseInt(neighborhoodResourceResult.rows[0].count);
+    }
+
     res.render("dashboard", {
       user: req.user,
       household,
       resources: formattedResources,
       neighborhoods: neighborhoodsResult.rows,
+      neighborhoodResourceCount,
       householdMembers: [],
       currentPage: 'dashboard'
     });

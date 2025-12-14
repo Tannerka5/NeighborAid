@@ -65,6 +65,7 @@ exports.showProfile = async (req, res) => {
       household,
       resources,
       ownerUser,
+      currentPage: 'household',
       error: null
     });
 
@@ -75,6 +76,7 @@ exports.showProfile = async (req, res) => {
       household: null,
       resources: [],
       ownerUser: {},
+      currentPage: 'household',
       error: "Could not load household profile"
     });
   }

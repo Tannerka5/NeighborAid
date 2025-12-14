@@ -28,19 +28,35 @@
   </div>
 
   <!-- Resources Card -->
-  <div class="card">
-    <div class="card-icon resources" style="background-color: #ffe8f0; color: #ff1744;">📦</div>
-    <div class="card-title">Resources</div>
-    <div class="card-value"><%= resources ? resources.length : 0 %></div>
-    <a href="/resources" class="card-action">Manage Resources →</a>
+  <div class="card card-highlight">
+    <div class="card-icon resources" style="background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); color: white; box-shadow: 0 4px 10px rgba(255, 107, 157, 0.3);">📦</div>
+    <div class="card-title">Your Resources</div>
+    <div class="card-value" style="flex-direction: column; align-items: flex-start;">
+      <div style="display: flex; align-items: baseline; gap: 8px;">
+        <span style="font-size: 28px; color: #c44569; font-weight: 700;">You Have</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 5px;">
+        <span style="font-size: 40px; color: #1e3c72; font-weight: 800;"><%= resources ? resources.length : 0 %></span>
+        <span style="font-size: 20px; color: #666; font-weight: 600;">Resource<%= (resources && resources.length !== 1) ? 's' : '' %></span>
+      </div>
+    </div>
+    <a href="/resources" class="card-action" style="color: #c44569;">Manage Resources →</a>
   </div>
 
   <!-- Neighborhood Map Card -->
-  <div class="card">
-    <div class="card-icon neighborhoods" style="background-color: #e3f2fd; color: #1976d2;">🗺️</div>
-    <div class="card-title">Neighborhood/Resource Map</div>
-    <div class="card-value"><%= neighborhoods ? neighborhoods.length : 0 %></div>
-    <a href="/directory/map" class="card-action">View Map →</a>
+  <div class="card card-highlight">
+    <div class="card-icon neighborhoods" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; box-shadow: 0 4px 10px rgba(79, 172, 254, 0.3);">🗺️</div>
+    <div class="card-title">Neighborhood Resources</div>
+    <div class="card-value" style="flex-direction: column; align-items: flex-start;">
+      <div style="display: flex; align-items: baseline; gap: 8px;">
+        <span style="font-size: 28px; color: #1976d2; font-weight: 700;">Your Neighborhood Has</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 5px;">
+        <span style="font-size: 40px; color: #1e3c72; font-weight: 800;"><%= neighborhoodResourceCount || 0 %></span>
+        <span style="font-size: 20px; color: #666; font-weight: 600;">Resource<%= (neighborhoodResourceCount && neighborhoodResourceCount !== 1) ? 's' : '' %></span>
+      </div>
+    </div>
+    <a href="/directory/map" class="card-action" style="color: #1976d2;">View Map →</a>
   </div>
 </div>
 
@@ -59,7 +75,7 @@
       </div>
       <div class="profile-item">
         <div class="profile-label">Phone</div>
-        <div class="profile-value"><%= household.phone || 'Not Set' %></div>
+        <div class="profile-value"><%= household.phone_number || 'Not Set' %></div>
       </div>
       <div class="profile-item">
         <div class="profile-label">Neighborhood Code</div>
@@ -203,26 +219,41 @@
 
   .card {
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 25px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .card-highlight {
+    border: 2px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, rgba(42, 82, 152, 0.1), rgba(42, 82, 152, 0.05)) border-box;
+  }
+
+  .card-highlight:hover {
+    border-color: rgba(42, 82, 152, 0.2);
   }
 
   .card-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
+    font-size: 28px;
     margin-bottom: 15px;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
   }
 
   .card-title {
@@ -230,7 +261,7 @@
     color: #999;
     text-transform: uppercase;
     font-weight: 600;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     letter-spacing: 0.5px;
   }
 
@@ -248,6 +279,8 @@
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
+    transition: gap 0.2s ease;
+    display: inline-block;
   }
 
   .card-action:hover {
@@ -395,6 +428,10 @@
 
     .resource-quantity {
       align-self: flex-start;
+    }
+
+    .card-value {
+      font-size: 28px;
     }
   }
 </style>
